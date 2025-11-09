@@ -147,6 +147,7 @@ export default function CustomDrawerContent() {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 28,
     flex: 1,
     backgroundColor: colors.dark.sidebarBackground,
   },

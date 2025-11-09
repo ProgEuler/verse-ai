@@ -2,13 +2,13 @@ import colors from "@/constants/colors";
 import {
   Calendar,
   CheckCircle,
-  Facebook,
   MessageCircle,
 } from "lucide-react-native";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import WhatsApp from "@/assets/svgs/whatsapp.svg";
+import Facebook from "@/assets/svgs/facebook.svg";
 interface Appointment {
   id: string;
   time: string;
@@ -192,7 +192,7 @@ export default function DashboardScreen() {
           <View style={styles.channelsList}>
             <View style={styles.channelItem}>
               <View style={styles.channelIcon}>
-                <MessageCircle color="#25D366" size={24} />
+                <WhatsApp color="#25D366" size={24} />
               </View>
               <View style={styles.channelInfo}>
                 <Text style={styles.channelName}>WhatsApp</Text>
@@ -380,11 +380,16 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   channelsList: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 12,
   },
   channelItem: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
     padding: 16,
     backgroundColor: colors.dark.background,
     borderRadius: 8,

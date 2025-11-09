@@ -15,6 +15,7 @@ export default function DashboardLayout() {
         headerShown: true,
         headerStyle: {
           backgroundColor: colors.dark.cardBackground,
+
         },
         headerTintColor: colors.dark.text,
         drawerStyle: {
