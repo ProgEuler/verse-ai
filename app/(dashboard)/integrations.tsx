@@ -1,21 +1,101 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Plug } from 'lucide-react-native';
-import colors from '@/constants/colors';
+import colors from "@/constants/colors";
+import {
+  Calendar,
+  Instagram,
+  MessageCircle,
+  MessageSquare,
+  Zap,
+} from "lucide-react-native";
+import React from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+interface Integration {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  connected: boolean;
+}
 
 export default function IntegrationsScreen() {
   const insets = useSafeAreaInsets();
 
+  const integrations: Integration[] = [
+    {
+      id: "facebook",
+      name: "Facebook Messenger",
+      description: "Connect to collaborate easily",
+      icon: <MessageCircle color={colors.dark.primary} size={28} />,
+      connected: false,
+    },
+    {
+      id: "whatsapp",
+      name: "WhatsApp Business",
+      description: "Connect for ultimate reach",
+      icon: <MessageSquare color={colors.dark.primary} size={28} />,
+      connected: false,
+    },
+    {
+      id: "instagram",
+      name: "Instagram DM",
+      description: "Connect to transform replies",
+      icon: <Instagram color={colors.dark.primary} size={28} />,
+      connected: false,
+    },
+    {
+      id: "calendar",
+      name: "Calendar",
+      description: "Connect to automate Booking",
+      icon: <Calendar color={colors.dark.primary} size={28} />,
+      connected: false,
+    },
+    {
+      id: "crm",
+      name: "CRM (Zapier)",
+      description: "Connect to automate clerics",
+      icon: <Zap color={colors.dark.primary} size={28} />,
+      connected: false,
+    },
+  ];
+
+  const handleConnect = (integrationId: string) => {
+    console.log("Connecting to:", integrationId);
+  };
+
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-      <View style={styles.content}>
-        <View style={styles.iconContainer}>
-          <Plug color={colors.dark.primary} size={48} />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.grid}>
+          {integrations.map((integration) => (
+            <View key={integration.id} style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={styles.iconWrapper}>{integration.icon}</View>
+                <Text style={styles.cardTitle}>{integration.name}</Text>
+              </View>
+              <Text style={styles.cardDescription}>
+                {integration.description}
+              </Text>
+              <TouchableOpacity
+                style={styles.connectButton}
+                onPress={() => handleConnect(integration.id)}
+                testID={`connect-${integration.id}`}
+              >
+                <Text style={styles.connectButtonText}>Connect</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
-        <Text style={styles.title}>Integrations</Text>
-        <Text style={styles.subtitle}>Connect your channels and services</Text>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -25,30 +105,61 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark.background,
   },
-  content: {
+  scrollView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
   },
-  iconContainer: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
+  scrollContent: {
+    padding: 20,
+  },
+  grid: {
+    display: "flex",
+    flexDirection: "row" as const,
+    flexWrap: "wrap" as const,
+    gap: 14,
+    justifyContent: "space-between" as const,
+  },
+  card: {
+    width: "48%",
+    display: "flex",
+    flexDirection: "column" as const,
+    justifyContent: "space-between" as const,
     backgroundColor: colors.dark.cardBackground,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.05)",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: '700' as const,
-    color: colors.dark.text,
+  cardHeader: {
+    flexDirection: "column" as const,
+    alignItems: "flex-start" as const,
     marginBottom: 8,
   },
-  subtitle: {
+  iconWrapper: {
+    marginBottom: 12,
+  },
+  cardTitle: {
     fontSize: 16,
+    fontWeight: "600" as const,
+    color: colors.dark.text,
+    marginBottom: 4,
+  },
+  cardDescription: {
+    fontSize: 13,
     color: colors.dark.textSecondary,
-    textAlign: 'center' as const,
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+  connectButton: {
+    backgroundColor: colors.dark.primary,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+  },
+  connectButtonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "600" as const,
   },
 });

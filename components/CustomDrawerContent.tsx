@@ -1,241 +1,333 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
-import { useRouter, usePathname } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import {
-  LayoutDashboard,
-  Bot,
-  BookOpen,
-  Plug,
-  Calendar,
-  BarChart3,
-  MessageSquare,
-  HelpCircle,
-  Settings,
-  Link2,
-  Sparkles,
-  MessageCircle,
-  LogOut,
-} from 'lucide-react-native';
-import colors from '@/constants/colors';
 import Logo from "@/assets/svgs/logo.svg";
+import colors from "@/constants/colors";
+import { LinearGradient } from "expo-linear-gradient";
+import { usePathname, useRouter } from "expo-router";
+import {
+    BarChart3,
+    BookOpen,
+    Bot,
+    Calendar,
+    HelpCircle,
+    LayoutDashboard,
+    Link2,
+    LogOut,
+    MessageCircle,
+    MessageSquare,
+    Plug,
+    Settings,
+    Sparkles,
+} from "lucide-react-native";
+import React from "react";
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 interface MenuItem {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ color: string; size: number }>;
-  route: string;
+    id: string;
+    label: string;
+    icon: React.ComponentType<{ color: string; size: number }>;
+    route: string;
 }
 
 const mainMenuItems: MenuItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, route: '/(dashboard)/home' },
-  { id: 'ai-assistant', label: 'AI Assistant', icon: Bot, route: '/(dashboard)/ai-assistant' },
-  { id: 'knowledge-base', label: 'Knowledge Base', icon: BookOpen, route: '/(dashboard)/knowledge-base' },
-  { id: 'integrations', label: 'Integrations', icon: Plug, route: '/(dashboard)/integrations' },
-  { id: 'appointments', label: 'Appointments', icon: Calendar, route: '/(dashboard)/appointments' },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3, route: '/(dashboard)/analytics' },
-  { id: 'chat-history', label: 'Chat History', icon: MessageSquare, route: '/(dashboard)/chat-history' },
-  { id: 'support', label: 'Support', icon: HelpCircle, route: '/(dashboard)/support' },
-  { id: 'settings', label: 'Settings', icon: Settings, route: '/(dashboard)/settings' },
+    {
+        id: "dashboard",
+        label: "Dashboard",
+        icon: LayoutDashboard,
+        route: "/(dashboard)/home",
+    },
+    {
+        id: "ai-assistant",
+        label: "AI Assistant",
+        icon: Bot,
+        route: "/(dashboard)/ai-assistant",
+    },
+    {
+        id: "knowledge-base",
+        label: "Knowledge Base",
+        icon: BookOpen,
+        route: "/(dashboard)/knowledge-base",
+    },
+    {
+        id: "integrations",
+        label: "Integrations",
+        icon: Plug,
+        route: "/(dashboard)/integrations",
+    },
+    {
+        id: "appointments",
+        label: "Agenda Integration",
+        icon: Calendar,
+        route: "/(dashboard)/appointments",
+    },
+    {
+        id: "analytics",
+        label: "Analytics",
+        icon: BarChart3,
+        route: "/(dashboard)/analytics",
+    },
+    {
+        id: "chat-history",
+        label: "Chat History",
+        icon: MessageSquare,
+        route: "/(dashboard)/chat-history",
+    },
+    {
+        id: "support",
+        label: "Support",
+        icon: HelpCircle,
+        route: "/(dashboard)/support",
+    },
+    {
+        id: "settings",
+        label: "Settings",
+        icon: Settings,
+        route: "/(dashboard)/settings",
+    },
 ];
 
 const quickActions: MenuItem[] = [
-  { id: 'connect-channel', label: 'Connect Channel', icon: Link2, route: '/(dashboard)/integrations' },
-  { id: 'train-ai', label: 'Train AI', icon: Sparkles, route: '/(dashboard)/knowledge-base' },
-  { id: 'test-chat', label: 'Test Chat', icon: MessageCircle, route: '/(dashboard)/chat-history' },
+    {
+        id: "connect-channel",
+        label: "Connect Channel",
+        icon: Link2,
+        route: "/(dashboard)/integrations",
+    },
+    {
+        id: "train-ai",
+        label: "Train AI",
+        icon: Sparkles,
+        route: "/(dashboard)/knowledge-base",
+    },
+    {
+        id: "test-chat",
+        label: "Test Chat",
+        icon: MessageCircle,
+        route: "/(dashboard)/chat-history",
+    },
 ];
 
 export default function CustomDrawerContent() {
-  const router = useRouter();
-  const pathname = usePathname();
+    const router = useRouter();
+    const pathname = usePathname();
 
-  const handleNavigation = (route: string) => {
-    router.push(route as any);
-  };
+    const handleNavigation = (route: string) => {
+        router.push(route as any);
+    };
 
-  const handleLogout = () => {
-    router.replace('/login');
-  };
+    const handleLogout = () => {
+        router.replace("/login");
+    };
 
-  const isRouteActive = (route: string) => {
-    if (route === '/(dashboard)/home') {
-      return pathname === '/(dashboard)/home' || pathname === '/(dashboard)/';
-    }
-    return pathname.includes(route);
-  };
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <View style={styles.logoCircle}>
-            {/* <Bot color={colors.dark.primary} size={24} /> */}
-            {/* <Image source={logo} resizeMode='contain' style={{ width: 96, height: 96 }} /> */}
-            <Logo width={32} height={32} />
-          </View>
-          <Text style={styles.logoText}>Verse AI</Text>
-        </View>
-      </View>
-
-      <ScrollView style={styles.menuContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.section}>
-          {mainMenuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = isRouteActive(item.route);
-
+    const isRouteActive = (route: string) => {
+        if (route === "/(dashboard)/home") {
             return (
-              <TouchableOpacity
-                key={item.id}
-                style={[styles.menuItem, isActive && styles.menuItemActive]}
-                onPress={() => handleNavigation(item.route)}
-              >
-                <Icon
-                  color={isActive ? colors.dark.primary : colors.dark.textSecondary}
-                  size={20}
-                />
-                <Text style={[styles.menuText, isActive && styles.menuTextActive]}>
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
+                pathname === "/(dashboard)/home" || pathname === "/(dashboard)/"
             );
-          })}
-        </View>
-
-        <View style={styles.divider} />
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          {quickActions.map((item) => {
-            const Icon = item.icon;
-
+        }
+        // For appointments route, also check for add-appointment
+        if (route === "/(dashboard)/appointments") {
             return (
-              <TouchableOpacity
-                key={item.id}
-                style={styles.menuItem}
-                onPress={() => handleNavigation(item.route)}
-              >
-                <Icon color={colors.dark.textSecondary} size={20} />
-                <Text style={styles.menuText}>{item.label}</Text>
-              </TouchableOpacity>
+                pathname === "/(dashboard)/appointments" ||
+                pathname.includes("/(dashboard)/add-appointment")
             );
-          })}
-        </View>
-      </ScrollView>
+        }
+        return pathname === route || pathname.startsWith(route + "/");
+    };
 
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={handleLogout}>
-          <LinearGradient
-            colors={[colors.dark.gradientStart, colors.dark.gradientEnd]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.logoutButton}
-          >
-            <LogOut color={colors.dark.text} size={20} />
-            <Text style={styles.logoutText}>LOGOUT</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <View style={styles.logoContainer}>
+                    <View style={styles.logoCircle}>
+                        {/* <Bot color={colors.dark.primary} size={24} /> */}
+                        {/* <Image source={logo} resizeMode='contain' style={{ width: 96, height: 96 }} /> */}
+                        <Logo width={32} height={32} />
+                    </View>
+                    <Text style={styles.logoText}>Verse AI</Text>
+                </View>
+            </View>
+
+            <ScrollView
+                style={styles.menuContainer}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.section}>
+                    {mainMenuItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = isRouteActive(item.route);
+
+                        return (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={[
+                                    styles.menuItem,
+                                    isActive && styles.menuItemActive,
+                                ]}
+                                onPress={() => handleNavigation(item.route)}
+                            >
+                                <Icon
+                                    color={
+                                        isActive
+                                            ? colors.dark.primary
+                                            : colors.dark.textSecondary
+                                    }
+                                    size={20}
+                                />
+                                <Text
+                                    style={[
+                                        styles.menuText,
+                                        isActive && styles.menuTextActive,
+                                    ]}
+                                >
+                                    {item.label}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+
+                <View style={styles.divider} />
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Quick Actions</Text>
+                    {quickActions.map((item) => {
+                        const Icon = item.icon;
+
+                        return (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={styles.menuItem}
+                                onPress={() => handleNavigation(item.route)}
+                            >
+                                <Icon
+                                    color={colors.dark.textSecondary}
+                                    size={20}
+                                />
+                                <Text style={styles.menuText}>
+                                    {item.label}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+            </ScrollView>
+
+            <View style={styles.footer}>
+                <TouchableOpacity onPress={handleLogout}>
+                    <LinearGradient
+                        colors={[
+                            colors.dark.gradientStart,
+                            colors.dark.gradientEnd,
+                        ]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={styles.logoutButton}
+                    >
+                        <LogOut color={colors.dark.text} size={20} />
+                        <Text style={styles.logoutText}>LOGOUT</Text>
+                    </LinearGradient>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 28,
-    flex: 1,
-    backgroundColor: colors.dark.sidebarBackground,
-  },
-  header: {
-    paddingVertical: 24,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.dark.border,
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  logoCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.dark.cardBackground,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: 18,
-    fontWeight: '600' as const,
-    color: colors.dark.text,
-  },
-  menuContainer: {
-    flex: 1,
-    paddingVertical: 16,
-  },
-  section: {
-    paddingHorizontal: 12,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: '600' as const,
-   //  color: colors.dark.textSecondary,
-    color: "white",
-    textTransform: 'uppercase' as const,
-    marginBottom: 8,
-    marginTop: 8,
-    paddingHorizontal: 8,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    marginBottom: 4,
-  },
-  menuItemActive: {
-    backgroundColor: colors.dark.primary,
-  },
-  menuText: {
-    fontSize: 15,
-    color: colors.dark.textSecondary,
-    fontWeight: '500' as const,
-  },
-  menuTextActive: {
-    color: colors.dark.text,
-    fontWeight: '600' as const,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: colors.dark.border,
-    marginVertical: 16,
-    marginHorizontal: 20,
-  },
-  footer: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.dark.border,
-  },
-  logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: 8,
-  },
-  logoutText: {
-    fontSize: 14,
-    fontWeight: '700' as const,
-    color: colors.dark.text,
-    letterSpacing: 0.5,
-  },
+    container: {
+        marginTop: 28,
+        flex: 1,
+        backgroundColor: colors.dark.sidebarBackground,
+    },
+    header: {
+        paddingVertical: 24,
+        paddingHorizontal: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.dark.border,
+    },
+    logoContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+    },
+    logoCircle: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: colors.dark.cardBackground,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    logoText: {
+        fontSize: 18,
+        fontWeight: "600" as const,
+        color: colors.dark.text,
+    },
+    menuContainer: {
+        flex: 1,
+        paddingVertical: 16,
+    },
+    section: {
+        paddingHorizontal: 12,
+    },
+    sectionTitle: {
+        fontSize: 12,
+        fontWeight: "600" as const,
+        //  color: colors.dark.textSecondary,
+        color: "white",
+        textTransform: "uppercase" as const,
+        marginBottom: 8,
+        marginTop: 8,
+        paddingHorizontal: 8,
+    },
+    menuItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        marginBottom: 4,
+    },
+    menuItemActive: {
+        backgroundColor: colors.dark.primary,
+    },
+    menuText: {
+        fontSize: 15,
+        color: colors.dark.textSecondary,
+        fontWeight: "500" as const,
+    },
+    menuTextActive: {
+        color: colors.dark.text,
+        fontWeight: "600" as const,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: colors.dark.border,
+        marginVertical: 16,
+        marginHorizontal: 20,
+    },
+    footer: {
+        padding: 16,
+        borderTopWidth: 1,
+        borderTopColor: colors.dark.border,
+    },
+    logoutButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        paddingVertical: 14,
+        borderRadius: 8,
+    },
+    logoutText: {
+        fontSize: 14,
+        fontWeight: "700" as const,
+        color: colors.dark.text,
+        letterSpacing: 0.5,
+    },
 });
