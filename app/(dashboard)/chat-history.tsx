@@ -1,9 +1,11 @@
 import Facebook from "@/assets/svgs/facebook.svg";
 import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import colors from "@/constants/colors";
+import { useRouter } from "expo-router";
 import {
     Check,
     ChevronDown,
+    Instagram,
     MessageCircle,
     Search,
     Star,
@@ -110,6 +112,7 @@ const channelColors = {
 
 export default function ChatHistoryScreen() {
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("Newest");
     const [selectedChannel, setSelectedChannel] = useState<
@@ -127,18 +130,18 @@ export default function ChatHistoryScreen() {
     });
 
     const handleChatSelect = (chatId: string) => {
-        setChats(
-            chats.map((chat) => ({
-                ...chat,
-                isSelected: chat.id === chatId,
-            }))
-        );
+        // Navigate to chat detail screen
+        router.push({
+            pathname: "/(dashboard)/chat-detail",
+            params: { chatId },
+        });
     };
 
     return (
         <View style={[styles.container, { paddingBottom: insets.bottom }]}>
             {/* Channel Icons */}
             <View style={styles.channelIconsContainer}>
+               {/* all */}
                 <TouchableOpacity
                     style={[
                         styles.channelIcon,
@@ -155,6 +158,7 @@ export default function ChatHistoryScreen() {
                         }
                     />
                 </TouchableOpacity>
+                {/* facebook */}
                 <TouchableOpacity
                     style={[
                         styles.channelIcon,
@@ -173,6 +177,7 @@ export default function ChatHistoryScreen() {
                         }
                     />
                 </TouchableOpacity>
+                  {/* whatsapp */}
                 <TouchableOpacity
                     style={[
                         styles.channelIcon,
@@ -191,6 +196,7 @@ export default function ChatHistoryScreen() {
                         }
                     />
                 </TouchableOpacity>
+                  {/* instagram */}
                 <TouchableOpacity
                     style={[
                         styles.channelIcon,
@@ -199,7 +205,7 @@ export default function ChatHistoryScreen() {
                     ]}
                     onPress={() => setSelectedChannel("instagram")}
                 >
-                    <MessageCircle
+                    <Instagram
                         size={24}
                         color={
                             selectedChannel === "instagram"
@@ -207,39 +213,6 @@ export default function ChatHistoryScreen() {
                                 : colors.dark.textSecondary
                         }
                     />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[
-                        styles.channelIcon,
-                        selectedChannel === "chat" && styles.channelIconActive,
-                    ]}
-                    onPress={() => setSelectedChannel("chat")}
-                >
-                    <View style={styles.chatIconContainer}>
-                        <View
-                            style={[
-                                styles.chatBubble,
-                                {
-                                    backgroundColor:
-                                        selectedChannel === "chat"
-                                            ? colors.dark.text
-                                            : colors.dark.textSecondary,
-                                },
-                            ]}
-                        />
-                        <View
-                            style={[
-                                styles.chatBubble,
-                                styles.chatBubbleOverlay,
-                                {
-                                    backgroundColor:
-                                        selectedChannel === "chat"
-                                            ? colors.dark.text
-                                            : colors.dark.textSecondary,
-                                },
-                            ]}
-                        />
-                    </View>
                 </TouchableOpacity>
             </View>
 
@@ -287,11 +260,9 @@ export default function ChatHistoryScreen() {
                         return (
                             <TouchableOpacity
                                 key={chat.id}
-                                style={[
-                                    styles.chatItem,
-                                    chat.isSelected && styles.chatItemSelected,
-                                ]}
+                                style={styles.chatItem}
                                 onPress={() => handleChatSelect(chat.id)}
+                                activeOpacity={0.7}
                             >
                                 {/* Profile Picture */}
                                 <View style={styles.profilePictureContainer}>
@@ -508,11 +479,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 4,
         backgroundColor: "transparent",
-    },
-    chatItemSelected: {
-        backgroundColor: colors.dark.cardBackground,
-        borderWidth: 1,
-        borderColor: colors.dark.primary + "40",
     },
     profilePictureContainer: {
         position: "relative",

@@ -192,7 +192,7 @@ export default function DashboardScreen() {
           <View style={styles.channelsList}>
             <View style={styles.channelItem}>
               <View style={styles.channelIcon}>
-                <WhatsApp color="#25D366" size={24} />
+                <WhatsApp color="#25D366" width={24} height={24} />
               </View>
               <View style={styles.channelInfo}>
                 <Text style={styles.channelName}>WhatsApp</Text>
@@ -201,7 +201,7 @@ export default function DashboardScreen() {
             </View>
             <View style={styles.channelItem}>
               <View style={styles.channelIcon}>
-                <Facebook color="#1877F2" size={24} />
+                <Facebook color="#1877F2" width={24} height={24} />
               </View>
               <View style={styles.channelInfo}>
                 <Text style={styles.channelName}>Facebook</Text>

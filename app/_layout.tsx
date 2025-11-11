@@ -1,3 +1,4 @@
+import colors from "@/constants/colors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -34,7 +35,7 @@ export default function RootLayout() {
           <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
             <StatusBar
               animated
-              backgroundColor= "#EF4444"
+              backgroundColor= { colors.dark.background }
               barStyle="light-content"
             />
             <RootLayoutNav />

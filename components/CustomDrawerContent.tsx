@@ -16,6 +16,8 @@ import {
     Plug,
     Settings,
     Sparkles,
+    User2,
+    Users,
 } from "lucide-react-native";
 import React from "react";
 import {
@@ -83,6 +85,12 @@ const mainMenuItems: MenuItem[] = [
         route: "/(dashboard)/support",
     },
     {
+         id: "team",
+         label: "Team",
+         icon: Users,
+         route: "/(dashboard)/team",
+    },
+    {
         id: "settings",
         label: "Settings",
         icon: Settings,
@@ -91,12 +99,12 @@ const mainMenuItems: MenuItem[] = [
 ];
 
 const quickActions: MenuItem[] = [
-    {
-        id: "connect-channel",
-        label: "Connect Channel",
-        icon: Link2,
-        route: "/(dashboard)/integrations",
-    },
+   //  {
+   //      id: "connect-channel",
+   //      label: "Connect Channel",
+   //      icon: Link2,
+   //      route: "/(dashboard)/integrations",
+   //  },
     {
         id: "train-ai",
         label: "Train AI",

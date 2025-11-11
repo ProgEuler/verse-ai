@@ -83,6 +83,15 @@ export default function DashboardLayout() {
                 }}
             />
             <Drawer.Screen
+                name="chat-detail"
+                options={{
+                    drawerLabel: "Chat Detail",
+                    title: "",
+                    drawerItemStyle: { display: "none" },
+                    headerShown: false,
+                }}
+            />
+            <Drawer.Screen
                 name="support"
                 options={{
                     drawerLabel: "Support",

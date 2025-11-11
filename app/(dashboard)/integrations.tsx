@@ -1,3 +1,4 @@
+import Layout from "@/components/layout/Layout";
 import colors from "@/constants/colors";
 import {
   Calendar,
@@ -8,7 +9,6 @@ import {
 } from "lucide-react-native";
 import React from "react";
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -70,11 +70,7 @@ export default function IntegrationsScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-      >
+   <Layout scrollable avoidTabbar>
         <View style={styles.grid}>
           {integrations.map((integration) => (
             <View key={integration.id} style={styles.card}>
@@ -95,8 +91,7 @@ export default function IntegrationsScreen() {
             </View>
           ))}
         </View>
-      </ScrollView>
-    </View>
+   </Layout>
   );
 }
 
@@ -108,9 +103,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  scrollContent: {
-    padding: 20,
-  },
   grid: {
     display: "flex",
     flexDirection: "row" as const,
@@ -119,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between" as const,
   },
   card: {
-    width: "48%",
+    width: "100%",
     display: "flex",
     flexDirection: "column" as const,
     justifyContent: "space-between" as const,
