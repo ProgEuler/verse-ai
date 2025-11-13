@@ -12,6 +12,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronDown, Clock, MapPin, Plus, X, Upload } from 'lucide-react-native';
 import colors from '@/constants/colors';
+import Layout from '@/components/layout/Layout';
 
 type DayOfWeek = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 
@@ -87,12 +88,9 @@ export default function AIAssistantScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 100 }]}
-        showsVerticalScrollIndicator={false}
-      >
+   <>
+   <Layout scrollable>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Company Name</Text>
           <TextInput
@@ -356,14 +354,14 @@ export default function AIAssistantScreen() {
             autoCapitalize="none"
           />
         </View>
-      </ScrollView>
 
+         </Layout>
       <View style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
           <Text style={styles.updateButtonText}>Update</Text>
         </TouchableOpacity>
       </View>
-    </View>
+   </>
   );
 }
 
@@ -493,12 +491,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.dark.cardBackground,
     borderRadius: 8,
-    paddingLeft: 12,
-    paddingRight: 8,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
     gap: 8,
-    borderWidth: 1,
-    borderColor: '#EF4444',
   },
   openText: {
     fontSize: 14,

@@ -1,73 +1,79 @@
-import { useRouter } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import Layout from "@/components/layout/Layout";
+import colors from "@/constants/colors";
+import { useRouter } from "expo-router";
 import {
-  View,
-  Text,
-  StyleSheet,
   Dimensions,
-  SafeAreaView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
-} from 'react-native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+  View,
+} from "react-native";
+import Carousel from "react-native-reanimated-carousel";
 
-const { width: viewportWidth } = Dimensions.get('window');
+const { width: viewportWidth } = Dimensions.get("window");
 
 const plans = [
   {
-    title: 'Basic',
-    price: '$29',
-    period: '/month',
-    description: 'Perfect for small teams and startups',
+    title: "Basic",
+    price: "$29",
+    period: "/month",
+    description: "Perfect for small teams and startups",
     features: [
-      'Up to 10 users',
-      '50GB storage',
-      'Basic analytics',
-      'Email support',
-      'API access',
-      'Custom branding',
+      "Up to 10 users",
+      "50GB storage",
+      "Basic analytics",
+      "Email support",
+      "API access",
+      "Custom branding",
     ],
-    buttonText: 'Get Started',
+    buttonText: "Get Started",
     popular: false,
   },
   {
-    title: 'Pro',
-    price: '$79',
-    period: '/month',
-    description: 'Best for growing businesses',
+    title: "Pro",
+    price: "$79",
+    period: "/month",
+    description: "Best for growing businesses",
     features: [
-      'Up to 50 users',
-      '500GB storage',
-      'Advanced analytics',
-      'Priority email & chat support',
-      'API access + Webhooks',
-      'Custom branding',
-      'Workflow automation',
-      'Team collaboration tools',
+      "Up to 50 users",
+      "500GB storage",
+      "Advanced analytics",
+      "Priority email & chat support",
+      "API access + Webhooks",
+      "Custom branding",
+      "Workflow automation",
+      "Team collaboration tools",
     ],
-    buttonText: 'Get Started',
+    buttonText: "Get Started",
     popular: true,
   },
   {
-    title: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    description: 'For large-scale operations',
+    title: "Enterprise",
+    price: "Custom",
+    period: "",
+    description: "For large-scale operations",
     features: [
-      'Unlimited users',
-      'Unlimited storage',
-      'Real-time analytics & AI insights',
-      '24/7 phone & dedicated support',
-      'Custom API & integrations',
-      'White-label branding',
-      'Advanced security & compliance',
-      'On-premise deployment option',
+      "Unlimited users",
+      "Unlimited storage",
+      "Real-time analytics & AI insights",
+      "24/7 phone & dedicated support",
+      "Custom API & integrations",
+      "White-label branding",
+      "Advanced security & compliance",
+      "On-premise deployment option",
     ],
-    buttonText: 'Contact Sales',
+    buttonText: "Contact Sales",
     popular: false,
   },
 ];
 
-const PricingCard = ({ item, onGetStarted }: { item: any, onGetStarted: () => void }) => {
+const PricingCard = ({
+  item,
+  onGetStarted,
+}: {
+  item: any;
+  onGetStarted: () => void;
+}) => {
   return (
     <View style={[styles.card, item.popular && styles.popularCard]}>
       {item.popular && (
@@ -98,51 +104,35 @@ const PricingCard = ({ item, onGetStarted }: { item: any, onGetStarted: () => vo
 };
 
 function WelcomeScreen() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const carouselRef = useRef(null);
   const router = useRouter();
 
   const handleGetStarted = () => {
-    router.replace('/(dashboard)/home');
-  };
-
-  const renderItem = ({ item }: { item: any }) => {
-    return <PricingCard item={item} onGetStarted={handleGetStarted} />;
+    router.replace("/(dashboard)/home");
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Layout scrollable>
       <View style={styles.header}>
-        <Text style={styles.welcomeTitle}>Welcome to the Future of AI Automation!</Text>
+        <Text style={styles.welcomeTitle}>
+          Welcome to the Future of AI Automation!
+        </Text>
         <Text style={styles.subtitle}>
-          Empower your business with intelligent tools designed to streamline operations and boost productivity. Pick your plan and start innovating today.
+          Empower your business with intelligent tools designed to streamline
+          operations and boost productivity. Pick your plan and start innovating
+          today.
         </Text>
       </View>
 
       <Carousel
-        ref={carouselRef}
+        width={viewportWidth}
+        height={600}
         data={plans}
-        renderItem={renderItem}
-        sliderWidth={viewportWidth}
-        itemWidth={viewportWidth * 0.85}
-        inactiveSlideScale={0.9}
-        inactiveSlideOpacity={0.7}
-        onSnapToItem={(index) => setActiveIndex(index)}
-        loop={false}
-        layout="default"
-        style={{ overflow: 'visible' }}
+        scrollAnimationDuration={800}
+        renderItem={({ item }) => (
+          <PricingCard item={item} onGetStarted={handleGetStarted} />
+        )}
       />
-
-      <Pagination
-        dotsLength={plans.length}
-        activeDotIndex={activeIndex}
-        dotStyle={styles.dotStyle}
-        inactiveDotStyle={styles.inactiveDotStyle}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-        containerStyle={styles.paginationContainer}
-      />
-    </SafeAreaView>
+    </Layout>
   );
 }
 
@@ -151,7 +141,7 @@ export default WelcomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
   },
   header: {
     paddingHorizontal: 30,
@@ -160,79 +150,80 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
     marginBottom: 16,
   },
   subtitle: {
     fontSize: 16,
-    color: '#aaa',
-    textAlign: 'center',
+    color: "#aaa",
+    textAlign: "center",
     lineHeight: 22,
   },
   card: {
-    backgroundColor: '#1a1a1a',
+    backgroundColor: "#1a1a1a",
     borderRadius: 20,
     padding: 24,
     marginHorizontal: 10,
-    height: 580,
-    justifyContent: 'flex-start',
+    width: viewportWidth - 60,
+    height: 560,
+    justifyContent: "flex-start",
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: "#333",
   },
   popularCard: {
-    borderColor: '#00d4ff',
+    borderColor: colors.dark.primary,
     borderWidth: 2,
-    shadowColor: '#00d4ff',
+    shadowColor: colors.dark.primary,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
     elevation: 10,
   },
   popularBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: -12,
-    alignSelf: 'center',
-    backgroundColor: '#00d4ff',
+    alignSelf: "center",
+    backgroundColor: colors.dark.primary,
     paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 20,
     zIndex: 1,
   },
   popularText: {
-    color: '#000',
-    fontWeight: 'bold',
+    color: "#000",
+    fontWeight: "bold",
     fontSize: 12,
   },
   cardTitle: {
     fontSize: 26,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
     marginBottom: 8,
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "center",
     marginBottom: 12,
   },
   price: {
     fontSize: 48,
-    fontWeight: 'bold',
-    color: '#00d4ff',
+    fontWeight: "bold",
+    color: colors.dark.primary,
   },
   period: {
     fontSize: 18,
-    color: '#aaa',
+    color: "#aaa",
     marginLeft: 4,
     marginBottom: 8,
   },
   description: {
     fontSize: 16,
-    color: '#ccc',
-    textAlign: 'center',
+    color: "#ccc",
+    textAlign: "center",
     marginBottom: 24,
   },
   featuresContainer: {
@@ -241,19 +232,19 @@ const styles = StyleSheet.create({
   },
   feature: {
     fontSize: 15,
-    color: '#ddd',
+    color: "#ddd",
     marginVertical: 6,
   },
   button: {
-    backgroundColor: '#00d4ff',
+    backgroundColor: colors.dark.primary,
     paddingVertical: 16,
     borderRadius: 30,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: '#000',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   paginationContainer: {
     paddingVertical: 20,
@@ -262,9 +253,9 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#00d4ff',
+    backgroundColor: colors.dark.primary,
   },
   inactiveDotStyle: {
-    backgroundColor: '#444',
+    backgroundColor: "#444",
   },
 });

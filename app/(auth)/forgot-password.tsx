@@ -1,17 +1,9 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import Layout from "@/components/layout/Layout";
+import { Button } from "@/components/ui/Button";
 import colors from "@/constants/colors";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -24,52 +16,40 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <View style={styles.background}>
-      <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardView}
-        >
-          <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
-            <Text style={styles.title}>Forgot Password?</Text>
-            <Text style={styles.subtitle}>
-              Enter your email address to receive a verification code.
-            </Text>
+    <Layout scrollable>
+      <View style={styles.scrollContent}>
+        <Text style={styles.title}>Forgot Password?</Text>
+        <Text style={styles.subtitle}>
+          Enter your email address to receive a verification code.
+        </Text>
 
-            <View style={styles.form}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter your email"
-                  placeholderTextColor="#A0A0A0"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                />
-              </View>
+        <View style={styles.form}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your email"
+              placeholderTextColor="#A0A0A0"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+            />
+          </View>
 
-              <TouchableOpacity style={styles.sendOtpButton} onPress={handleSendOtp}>
-                <Text style={styles.sendOtpButtonText}>Send Verification Code</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.backToLoginButton}
-                onPress={() => router.replace("/(auth)/login")}
-              >
-                <Text style={styles.backToLoginButtonText}>Back to Login</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </View>
+          <View style={{ flexDirection: "column", gap: 12 }}>
+            <Button onPress={handleSendOtp}>Send Verification Code</Button>
+            <Button
+              variant="outline"
+              onPress={() => router.replace("/(auth)/login")}
+            >
+              Back to Login
+            </Button>
+          </View>
+        </View>
+      </View>
+    </Layout>
   );
 }
 
