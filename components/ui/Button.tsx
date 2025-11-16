@@ -1,3 +1,4 @@
+import colors from "@/constants/colors";
 import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -11,6 +12,7 @@ import {
 } from "react-native";
 
 type Variant =
+  | "small"
   | "primary"
   | "secondary"
   | "outline"
@@ -38,8 +40,15 @@ const COLORS = {
 };
 
 const variantStyles: Record<Variant, ViewStyle> = {
+  small: {
+    marginLeft: "auto",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: colors.dark.primary,
+  },
   primary: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.dark.primary,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -86,7 +95,17 @@ const variantStyles: Record<Variant, ViewStyle> = {
 };
 
 const textStyles: Record<Variant, TextStyle> = {
-  primary: { color: COLORS.white, fontSize: 16, fontWeight: "500", textAlign: "center" },
+   small: {
+      color: COLORS.white,
+      fontSize: 14,
+      textAlign: "center",
+  },
+  primary: {
+    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: "500",
+    textAlign: "center",
+  },
   secondary: { color: COLORS.white, fontWeight: "500", textAlign: "center" },
   outline: {
     color: COLORS.white,
@@ -106,6 +125,7 @@ const textStyles: Record<Variant, TextStyle> = {
 };
 
 const spinnerColors: Record<Variant, string> = {
+   small: COLORS.white,
   primary: COLORS.white,
   secondary: COLORS.white,
   outline: COLORS.primary,
@@ -116,10 +136,7 @@ const spinnerColors: Record<Variant, string> = {
 };
 
 const sizeStyles: Record<Size, ViewStyle> = {
-  sm: {
-    height: 36,
-    minWidth: 100,
-  },
+  sm: { minWidth: 24 },
   lg: {
     height: 48,
     minWidth: 140,

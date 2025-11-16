@@ -21,7 +21,6 @@ export default function Layout({
           contentContainerStyle={{
             padding: noPadding ? 0 : 18,
           }}
-          nestedScrollEnabled
         >
           {children}
         </KeyboardAvoidingScrollView>
@@ -34,7 +33,7 @@ export default function Layout({
       <View
         style={{
           flex: 1,
-          padding: noPadding ? 0 : 16,
+          padding: noPadding ? 0 : 18,
         }}
       >
         {children}

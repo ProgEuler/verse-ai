@@ -3,6 +3,7 @@ import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import {
   Dimensions,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -107,7 +108,10 @@ function WelcomeScreen() {
   const router = useRouter();
 
   const handleGetStarted = () => {
-    router.replace("/(dashboard)/home");
+     router.replace("/(dashboard)/home");
+   //  Linking.openURL(
+   //    "https://ape-in-eft.ngrok-free.app/api/finance/create-checkout/1/1/"
+   //  );
   };
 
   return (

@@ -1,19 +1,18 @@
+import Layout from "@/components/layout/Layout";
+import { Button } from "@/components/ui/Button";
 import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import {
-   ArrowLeft,
   Bell,
   Briefcase,
   Calendar as CalendarIcon,
   ChevronLeft,
   Clock,
   MapPin,
-  Send,
   User,
 } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -61,210 +60,212 @@ export default function AddAppointmentScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+    <Layout scrollable>
+      {/* <Text style={styles.title}>Add Appointments</Text> */}
+
+      {/* back */}
+      <TouchableOpacity
+        onPress={() => router.replace("/(dashboard)/appointments")}
+        style={{ marginBottom: 24 }}
       >
-        {/* <Text style={styles.title}>Add Appointments</Text> */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            gap: 6,
+            position: "fixed",
+            marginRight: 16,
+          }}
+        >
+          <ChevronLeft color={colors.dark.textSecondary} size={20} />
+          <Text style={{ color: colors.dark.text, fontSize: 16 }}>
+            {"Back"}
+          </Text>
+        </View>
+      </TouchableOpacity>
+      {/* Title */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Title</Text>
+        <View style={styles.inputWithIcon}>
+          <TextInput
+            style={styles.input}
+            placeholder="Appointments title here"
+            placeholderTextColor={colors.dark.textSecondary}
+            value={title}
+            onChangeText={setTitle}
+          />
+        </View>
+      </View>
 
-         {/* back */}
-         <TouchableOpacity
-            onPress={() => router.replace("/(dashboard)/appointments")}
-            style={{ marginBottom: 24 }}
-         >
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8, position: "fixed" }}>
-               <ChevronLeft color={colors.dark.textSecondary} size={20}/>
-               <Text style={{ color: colors.dark.text, fontSize: 16 }}>{"Back"}</Text>
-            </View>
-         </TouchableOpacity>
-        {/* Title */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Title</Text>
+      {/* Date & Time */}
+      <View style={styles.row}>
+        <View style={[styles.fieldContainer, { flex: 1, marginRight: 8 }]}>
+          <Text style={styles.label}>Date</Text>
           <View style={styles.inputWithIcon}>
             <TextInput
               style={styles.input}
-              placeholder="Appointments title here"
+              placeholder="12/10/2025"
               placeholderTextColor={colors.dark.textSecondary}
-              value={title}
-              onChangeText={setTitle}
+              value={date}
+              onChangeText={setDate}
             />
-          </View>
-        </View>
-
-        {/* Date & Time */}
-        <View style={styles.row}>
-          <View style={[styles.fieldContainer, { flex: 1, marginRight: 8 }]}>
-            <Text style={styles.label}>Date</Text>
-            <View style={styles.inputWithIcon}>
-              <TextInput
-                style={styles.input}
-                placeholder="12/10/2025"
-                placeholderTextColor={colors.dark.textSecondary}
-                value={date}
-                onChangeText={setDate}
-              />
-              <CalendarIcon
-                color={colors.dark.textSecondary}
-                size={20}
-                style={styles.inputIcon}
-              />
-            </View>
-          </View>
-          <View style={[styles.fieldContainer, { flex: 1, marginLeft: 8 }]}>
-            <Text style={styles.label}>Time</Text>
-            <View style={styles.inputWithIcon}>
-              <TextInput
-                style={styles.input}
-                placeholder="12:25 AM"
-                placeholderTextColor={colors.dark.textSecondary}
-                value={time}
-                onChangeText={setTime}
-              />
-              <Clock
-                color={colors.dark.textSecondary}
-                size={20}
-                style={styles.inputIcon}
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* Price & Reminder */}
-        <View style={styles.row}>
-          <View style={[styles.fieldContainer, { flex: 1, marginRight: 8 }]}>
-            <Text style={styles.label}>Price $ ( optional )</Text>
-            <View style={styles.priceInputContainer}>
-              <Text style={styles.currencyPrefix}>$</Text>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="100.00"
-                placeholderTextColor={colors.dark.textSecondary}
-                value={price}
-                onChangeText={(text) => {
-                  // Keep only numbers and decimal
-                  const cleaned = text.replace(/[^0-9.]/g, "");
-                  setPrice(cleaned);
-                }}
-                keyboardType="decimal-pad"
-              />
-              <View style={styles.priceIconPlaceholder} />
-            </View>
-          </View>
-          <View style={[styles.fieldContainer, { flex: 1, marginLeft: 8 }]}>
-            <Text style={styles.label}>Reminder</Text>
-            <View style={styles.inputWithIcon}>
-              <TextInput
-                style={styles.input}
-                placeholder="1 Hours Ago"
-                placeholderTextColor={colors.dark.textSecondary}
-                value={reminder}
-                onChangeText={setReminder}
-              />
-              <Bell
-                color={colors.dark.textSecondary}
-                size={20}
-                style={styles.inputIcon}
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* Client */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Client</Text>
-          <View style={styles.inputWithIcon}>
-            <TextInput
-              style={styles.input}
-              placeholder="Client name here"
-              placeholderTextColor={colors.dark.textSecondary}
-              value={client}
-              onChangeText={setClient}
-            />
-            <User
+            <CalendarIcon
               color={colors.dark.textSecondary}
               size={20}
               style={styles.inputIcon}
             />
           </View>
         </View>
-
-        {/* Location */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Location</Text>
+        <View style={[styles.fieldContainer, { flex: 1, marginLeft: 8 }]}>
+          <Text style={styles.label}>Time</Text>
           <View style={styles.inputWithIcon}>
             <TextInput
               style={styles.input}
-              placeholder="Location here"
+              placeholder="12:25 AM"
               placeholderTextColor={colors.dark.textSecondary}
-              value={location}
-              onChangeText={setLocation}
+              value={time}
+              onChangeText={setTime}
             />
-            <MapPin
+            <Clock
               color={colors.dark.textSecondary}
               size={20}
               style={styles.inputIcon}
             />
           </View>
         </View>
+      </View>
 
-        {/* Service */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Service</Text>
+      {/* Price & Reminder */}
+      <View style={styles.row}>
+        <View style={[styles.fieldContainer, { flex: 1, marginRight: 8 }]}>
+          <Text style={styles.label}>Price $ ( optional )</Text>
+          <View style={styles.priceInputContainer}>
+            <Text style={styles.currencyPrefix}>$</Text>
+            <TextInput
+              style={styles.priceInput}
+              placeholder="100.00"
+              placeholderTextColor={colors.dark.textSecondary}
+              value={price}
+              onChangeText={(text) => {
+                // Keep only numbers and decimal
+                const cleaned = text.replace(/[^0-9.]/g, "");
+                setPrice(cleaned);
+              }}
+              keyboardType="decimal-pad"
+            />
+            <View style={styles.priceIconPlaceholder} />
+          </View>
+        </View>
+        <View style={[styles.fieldContainer, { flex: 1, marginLeft: 8 }]}>
+          <Text style={styles.label}>Reminder</Text>
           <View style={styles.inputWithIcon}>
             <TextInput
               style={styles.input}
-              placeholder="Service here"
+              placeholder="1 Hours Ago"
               placeholderTextColor={colors.dark.textSecondary}
-              value={service}
-              onChangeText={setService}
+              value={reminder}
+              onChangeText={setReminder}
             />
-            <Briefcase
+            <Bell
               color={colors.dark.textSecondary}
               size={20}
               style={styles.inputIcon}
             />
           </View>
         </View>
+      </View>
 
-        {/* Notes */}
-        <View style={styles.fieldContainer}>
-          <Text style={styles.label}>Notes (optional)</Text>
-          <View style={styles.textAreaContainer}>
-            <TextInput
-              style={styles.textArea}
-              placeholder="Free text for internal information."
-              placeholderTextColor={colors.dark.textSecondary}
-              value={notes}
-              onChangeText={setNotes}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
-          </View>
+      {/* Client */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Client</Text>
+        <View style={styles.inputWithIcon}>
+          <TextInput
+            style={styles.input}
+            placeholder="Client name here"
+            placeholderTextColor={colors.dark.textSecondary}
+            value={client}
+            onChangeText={setClient}
+          />
+          <User
+            color={colors.dark.textSecondary}
+            size={20}
+            style={styles.inputIcon}
+          />
         </View>
+      </View>
+
+      {/* Location */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Location</Text>
+        <View style={styles.inputWithIcon}>
+          <TextInput
+            style={styles.input}
+            placeholder="Location here"
+            placeholderTextColor={colors.dark.textSecondary}
+            value={location}
+            onChangeText={setLocation}
+          />
+          <MapPin
+            color={colors.dark.textSecondary}
+            size={20}
+            style={styles.inputIcon}
+          />
+        </View>
+      </View>
+
+      {/* Service */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Service</Text>
+        <View style={styles.inputWithIcon}>
+          <TextInput
+            style={styles.input}
+            placeholder="Service here"
+            placeholderTextColor={colors.dark.textSecondary}
+            value={service}
+            onChangeText={setService}
+          />
+          <Briefcase
+            color={colors.dark.textSecondary}
+            size={20}
+            style={styles.inputIcon}
+          />
+        </View>
+      </View>
+
+      {/* Notes */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Notes (optional)</Text>
+        <View style={styles.textAreaContainer}>
+          <TextInput
+            style={styles.textArea}
+            placeholder="Free text for internal information."
+            placeholderTextColor={colors.dark.textSecondary}
+            value={notes}
+            onChangeText={setNotes}
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
+        </View>
+      </View>
       {/* Action Buttons */}
       <View style={styles.footer}>
-         <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 12}}>
-            <TouchableOpacity
-               style={styles.sendWhatsAppButton}
-               onPress={handleSendWhatsApp}
-            >
-               <Send color={colors.dark.text} size={20} />
-               <Text style={styles.sendWhatsAppText}>Send WhatsApp</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-               <Text style={styles.saveButtonText}>Save Appointments</Text>
-            </TouchableOpacity>
-         </View>
-        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          <Button onPress={handleSendWhatsApp}>Send WhatsApp</Button>
+          <Button style={styles.saveButton} onPress={handleSave}>
+            Save Appointments
+          </Button>
+        </View>
+        <Button variant="outline" onPress={handleCancel}>Cancel
+        </Button>
       </View>
-      </ScrollView>
-
-    </View>
+    </Layout>
   );
 }
 
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     gap: 8,
-    width: '48%',
+    width: "48%",
     flex: 1,
   },
   sendWhatsAppText: {
@@ -387,8 +388,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
     justifyContent: "center",
-      width: '48%',
-      flex: 1,
+    width: "48%",
+    flex: 1,
   },
   saveButtonText: {
     fontSize: 16,
