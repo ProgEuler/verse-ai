@@ -32,9 +32,7 @@ export default function OtpVerificationScreen() {
   const handleVerifyOtp = () => {
     const fullOtp = otp.join("");
     console.log("Verifying OTP:", fullOtp);
-    // In a real app, you would verify the OTP with your backend
-    // If successful, navigate to a password reset page or directly to login
-    router.replace("/(auth)/login"); // For now, redirect to login
+    router.replace("/(auth)/create-new-password");
   };
 
   return (

@@ -18,6 +18,7 @@ type Variant =
   | "outline"
   | "ghost"
   | "destructive"
+  | "destructive_outline"
   | "big"
   | "profile_menu";
 
@@ -77,6 +78,13 @@ const variantStyles: Record<Variant, ViewStyle> = {
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
+  destructive_outline: {
+    borderWidth: 1,
+    borderColor: COLORS.red,
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+  },
   big: {
     backgroundColor: COLORS.primary,
     borderRadius: 12,
@@ -95,26 +103,32 @@ const variantStyles: Record<Variant, ViewStyle> = {
 };
 
 const textStyles: Record<Variant, TextStyle> = {
-   small: {
-      color: COLORS.white,
-      fontSize: 14,
-      textAlign: "center",
+  small: {
+    color: COLORS.white,
+    fontSize: 14,
+    textAlign: "center",
   },
   primary: {
     color: COLORS.white,
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 14,
+    fontWeight: "400",
     textAlign: "center",
   },
   secondary: { color: COLORS.white, fontWeight: "500", textAlign: "center" },
   outline: {
     color: COLORS.white,
-    fontSize: 16,
-    fontWeight: "500" as const,
+    fontSize: 15,
+    fontWeight: "400" as const,
     textAlign: "center",
   },
   ghost: { color: COLORS.foreground, fontWeight: "600", textAlign: "center" },
   destructive: { color: COLORS.white, fontWeight: "600", textAlign: "center" },
+  destructive_outline: {
+    color: COLORS.red,
+    fontSize: 12,
+    fontWeight: "500" as const,
+    textAlign: "center",
+  },
   big: {
     color: COLORS.white,
     fontWeight: "600",
@@ -125,12 +139,13 @@ const textStyles: Record<Variant, TextStyle> = {
 };
 
 const spinnerColors: Record<Variant, string> = {
-   small: COLORS.white,
+  small: COLORS.white,
   primary: COLORS.white,
   secondary: COLORS.white,
   outline: COLORS.primary,
   ghost: COLORS.foreground,
   destructive: COLORS.white,
+  destructive_outline: COLORS.red,
   big: COLORS.white,
   profile_menu: COLORS.primary,
 };

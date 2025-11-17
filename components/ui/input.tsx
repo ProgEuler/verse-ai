@@ -106,7 +106,7 @@ export function RNInput({
                     flexDirection: "row",
                     alignItems: "center",
                     borderWidth: 1,
-                    borderColor: isFocusedState ? COLORS.primary : COLORS.secondaryText,
+                    borderColor: isFocusedState ? colors.dark.primary : COLORS.secondaryText,
                     borderRadius: 8,
                     paddingRight: props.secureTextEntry ? 32 : 0,
                 }}
@@ -148,10 +148,11 @@ export function RNInput({
                             flex: 1,
                             // borderWidth: 1,
                             // borderColor: COLORS.secondaryText,
-                            color: COLORS.text,
+                            color: colors.dark.text,
                             padding: 12,
                             borderRadius: 8,
                             fontSize: 16,
+                           //  backgroundColor: colors.dark.cardBackground,
                         },
                     ]}
                 />

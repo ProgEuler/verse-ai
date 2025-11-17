@@ -3,6 +3,7 @@ import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import {
   Dimensions,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 12,
-    paddingTop: 80,
+    paddingTop: Platform.OS === 'android' ? 0 : 80,
     paddingBottom: 0,
   },
   container: {

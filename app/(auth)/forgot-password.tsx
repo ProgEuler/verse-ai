@@ -1,4 +1,4 @@
-import Layout from "@/components/layout/Layout";
+import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
 import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
@@ -16,7 +16,7 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <Layout scrollable>
+    <Layout>
       <View style={styles.scrollContent}>
         <Text style={styles.title}>Forgot Password?</Text>
         <Text style={styles.subtitle}>

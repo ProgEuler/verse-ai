@@ -1,16 +1,11 @@
+import KeyboardAvoidingScrollView from "@/components/layout/KeyboardAvoidingScrollView";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
+import { RNDatePicker } from "@/components/ui/date-picker";
+import { RNInput } from "@/components/ui/input";
 import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
-import {
-  Bell,
-  Briefcase,
-  Calendar as CalendarIcon,
-  ChevronLeft,
-  Clock,
-  MapPin,
-  User,
-} from "lucide-react-native";
+import { ChevronLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -20,12 +15,24 @@ import {
   View,
 } from "react-native";
 
+type FormData = {
+  title?: string;
+  date?: Date;
+  time?: string;
+  price?: string;
+  reminder?: string;
+  client?: string;
+  location?: string;
+  service?: string;
+  notes?: string;
+};
+
 export default function AddAppointmentScreen() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("12/10/2025");
-  const [time, setTime] = useState("12:25 AM");
+  //   const [time, setTime] = useState("12:25 AM");
   const [price, setPrice] = useState("100.00");
   const [reminder, setReminder] = useState("1 Hours Ago");
   const [client, setClient] = useState("");
@@ -33,23 +40,22 @@ export default function AddAppointmentScreen() {
   const [service, setService] = useState("");
   const [notes, setNotes] = useState("");
 
+  const [formData, setFormData] = useState<FormData>({});
+
+  const handleInputChange = (field: keyof FormData, value: any) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
   const handleSendWhatsApp = () => {
     console.log("Send WhatsApp");
     // Handle WhatsApp send logic
   };
 
   const handleSave = () => {
-    console.log("Save appointment", {
-      title,
-      date,
-      time,
-      price,
-      reminder,
-      client,
-      location,
-      service,
-      notes,
-    });
+    console.log("Save appointment", formData);
     router.back();
   };
 
@@ -64,7 +70,6 @@ export default function AddAppointmentScreen() {
       {/* back */}
       <TouchableOpacity
         onPress={() => router.replace("/(dashboard)/appointments")}
-        style={{ marginBottom: 24 }}
       >
         <View
           style={{
@@ -83,7 +88,7 @@ export default function AddAppointmentScreen() {
       </TouchableOpacity>
       {/* Title */}
       <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Title</Text>
+        {/* <Text style={styles.label}>Title</Text>
         <View style={styles.inputWithIcon}>
           <TextInput
             style={styles.input}
@@ -92,127 +97,66 @@ export default function AddAppointmentScreen() {
             value={title}
             onChangeText={setTitle}
           />
-        </View>
+        </View> */}
+        <RNInput
+          label="Title"
+          onChangeText={(t) => handleInputChange("title", t)}
+        />
       </View>
 
       {/* Date & Time */}
       <View style={styles.row}>
-        <View style={[styles.fieldContainer, { flex: 1, marginRight: 8 }]}>
-          <Text style={styles.label}>Date</Text>
-          <View style={styles.inputWithIcon}>
-            <TextInput
-              style={styles.input}
-              placeholder="12/10/2025"
-              placeholderTextColor={colors.dark.textSecondary}
-              value={date}
-              onChangeText={setDate}
-            />
-            <CalendarIcon
-              color={colors.dark.textSecondary}
-              size={20}
-              style={styles.inputIcon}
+        <View
+          style={[
+            styles.fieldContainer,
+            { flex: 1, marginRight: 8, flexDirection: "row", gap: 6 },
+          ]}
+        >
+          <View style={{ width: "50%" }}>
+            <RNDatePicker
+              onChangeDate={(date) => handleInputChange("date", date)}
+              label="Date"
+              value={formData.date}
             />
           </View>
-        </View>
-        <View style={[styles.fieldContainer, { flex: 1, marginLeft: 8 }]}>
-          <Text style={styles.label}>Time</Text>
-          <View style={styles.inputWithIcon}>
-            <TextInput
-              style={styles.input}
-              placeholder="12:25 AM"
-              placeholderTextColor={colors.dark.textSecondary}
-              value={time}
-              onChangeText={setTime}
-            />
-            <Clock
-              color={colors.dark.textSecondary}
-              size={20}
-              style={styles.inputIcon}
+          <View style={{ width: "50%" }}>
+            <RNDatePicker
+              onChangeDate={(time) => handleInputChange("time", time)}
+              label="Time"
+              value={formData.time}
             />
           </View>
         </View>
       </View>
 
       {/* Price & Reminder */}
-      <View style={styles.row}>
-        <View style={[styles.fieldContainer, { flex: 1, marginRight: 8 }]}>
-          <Text style={styles.label}>Price $ ( optional )</Text>
-          <View style={styles.priceInputContainer}>
-            <Text style={styles.currencyPrefix}>$</Text>
-            <TextInput
-              style={styles.priceInput}
-              placeholder="100.00"
-              placeholderTextColor={colors.dark.textSecondary}
-              value={price}
-              onChangeText={(text) => {
-                // Keep only numbers and decimal
-                const cleaned = text.replace(/[^0-9.]/g, "");
-                setPrice(cleaned);
-              }}
-              keyboardType="decimal-pad"
-            />
-            <View style={styles.priceIconPlaceholder} />
-          </View>
-        </View>
-        <View style={[styles.fieldContainer, { flex: 1, marginLeft: 8 }]}>
-          <Text style={styles.label}>Reminder</Text>
-          <View style={styles.inputWithIcon}>
-            <TextInput
-              style={styles.input}
-              placeholder="1 Hours Ago"
-              placeholderTextColor={colors.dark.textSecondary}
-              value={reminder}
-              onChangeText={setReminder}
-            />
-            <Bell
-              color={colors.dark.textSecondary}
-              size={20}
-              style={styles.inputIcon}
-            />
-          </View>
-        </View>
-      </View>
-
-      {/* Client */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Client</Text>
-        <View style={styles.inputWithIcon}>
-          <TextInput
-            style={styles.input}
-            placeholder="Client name here"
-            placeholderTextColor={colors.dark.textSecondary}
-            value={client}
-            onChangeText={setClient}
+      <View style={{ flex: 1, flexDirection: "row", gap: 6 }}>
+        <View style={{ width: "50%" }}>
+          <RNInput
+            label="Price"
+            onChangeText={(t) => handleInputChange("price", t)}
           />
-          <User
-            color={colors.dark.textSecondary}
-            size={20}
-            style={styles.inputIcon}
+        </View>
+        <View style={{ width: "48%" }}>
+          <RNInput
+            label="Reminder"
+            onChangeText={(t) => handleInputChange("reminder", t)}
           />
         </View>
       </View>
 
-      {/* Location */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Location</Text>
-        <View style={styles.inputWithIcon}>
-          <TextInput
-            style={styles.input}
-            placeholder="Location here"
-            placeholderTextColor={colors.dark.textSecondary}
-            value={location}
-            onChangeText={setLocation}
-          />
-          <MapPin
-            color={colors.dark.textSecondary}
-            size={20}
-            style={styles.inputIcon}
-          />
-        </View>
-      </View>
+      <RNInput
+        label="Client"
+        onChangeText={(t) => handleInputChange("client", t)}
+      />
+
+      <RNInput
+        label="Location"
+        onChangeText={(t) => handleInputChange("location", t)}
+      />
 
       {/* Service */}
-      <View style={styles.fieldContainer}>
+      {/* <View style={styles.fieldContainer}>
         <Text style={styles.label}>Service</Text>
         <View style={styles.inputWithIcon}>
           <TextInput
@@ -228,8 +172,11 @@ export default function AddAppointmentScreen() {
             style={styles.inputIcon}
           />
         </View>
-      </View>
-
+      </View> */}
+      <RNInput
+        label="Service"
+        onChangeText={(t) => handleInputChange("service", t)}
+      />
       {/* Notes */}
       <View style={styles.fieldContainer}>
         <Text style={styles.label}>Notes (optional)</Text>
@@ -243,6 +190,7 @@ export default function AddAppointmentScreen() {
             multiline
             numberOfLines={4}
             textAlignVertical="top"
+            onChange={(t) => handleInputChange("notes", notes)}
           />
         </View>
       </View>
@@ -251,7 +199,6 @@ export default function AddAppointmentScreen() {
         <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-between",
             gap: 12,
           }}
         >
@@ -260,7 +207,8 @@ export default function AddAppointmentScreen() {
             Save Appointments
           </Button>
         </View>
-        <Button variant="outline" onPress={handleCancel}>Cancel
+        <Button variant="outline" onPress={handleCancel}>
+          Cancel
         </Button>
       </View>
     </Layout>
@@ -358,8 +306,6 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   footer: {
-    padding: 16,
-    borderTopWidth: 1,
     borderTopColor: colors.dark.border,
     backgroundColor: colors.dark.background,
     gap: 12,
@@ -372,7 +318,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     gap: 8,
-    width: "48%",
+    width: "50%",
     flex: 1,
   },
   sendWhatsAppText: {
@@ -386,7 +332,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
     justifyContent: "center",
-    width: "48%",
+    width: "50%",
     flex: 1,
   },
   saveButtonText: {
