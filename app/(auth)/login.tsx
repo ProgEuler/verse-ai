@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout/Layout";
+import { Button } from "@/components/ui/Button";
 import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
@@ -82,22 +83,15 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.socialButtons}>
-            <TouchableOpacity style={styles.socialButton}>
-              <Text style={styles.socialButtonText}>Continue with Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.socialButton}>
-              <Text style={styles.socialButtonText}>Continue with Apple</Text>
-            </TouchableOpacity>
+            <Button variant="outline">Continue with Google</Button>
+            <Button variant="outline">Continue with Apple</Button>
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Log in</Text>
-          </TouchableOpacity>
+          <Button onPress={handleLogin}>Login</Button>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don&apos;t have an account? </Text>
-            <TouchableOpacity onPress={() => router.push("/signup")}>
+            <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
               <Text style={styles.signupLink}>Signup</Text>
             </TouchableOpacity>
           </View>
@@ -222,6 +216,7 @@ const styles = StyleSheet.create({
     fontWeight: "600" as const,
   },
   footer: {
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

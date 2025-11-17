@@ -17,7 +17,7 @@ export default {
 };
 
 export const COLORS = {
-    primary: "#79AE46",
+    primary: "#0066FF",
     secondary: "#10B981",
     accent: "#DE5D83",
     background: "#FFFFFF",

@@ -1,4 +1,5 @@
-import Layout from "@/components/layout/Layout";
+import { Layout } from "@/components/layout/Layout";
+import { Button } from "@/components/ui/Button";
 import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
@@ -23,7 +24,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <Layout scrollable>
+    <Layout>
       <View style={styles.scrollContent}>
         <Text style={styles.title}>Welcome Back!</Text>
 
@@ -88,18 +89,11 @@ export default function SignupScreen() {
           </View>
 
           <View style={styles.socialButtons}>
-            <TouchableOpacity style={styles.socialButton}>
-              <Text style={styles.socialButtonText}>Continue with Google</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.socialButton}>
-              <Text style={styles.socialButtonText}>Continue with Apple</Text>
-            </TouchableOpacity>
+            <Button variant="outline">Continue with Google</Button>
+            <Button variant="outline">Continue with Apple</Button>
           </View>
 
-          <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
-            <Text style={styles.signupButtonText}>Signup</Text>
-          </TouchableOpacity>
+          <Button onPress={handleSignup}>Login</Button>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Already have an account? </Text>
@@ -219,6 +213,7 @@ const styles = StyleSheet.create({
     fontWeight: "600" as const,
   },
   footer: {
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

@@ -1,38 +1,24 @@
-import React, { useState, useRef } from "react";
+import { Button } from "@/components/ui/Button";
+import { OTPFields } from "@/components/ui/otp-input";
+import colors from "@/constants/colors";
+import { useRouter } from "expo-router";
+import React, { useRef, useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import colors from "@/constants/colors";
 
 export default function OtpVerificationScreen() {
   const router = useRouter();
-  const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
-  const otpInputs = useRef<TextInput[]>([]);
-
-  const handleOtpChange = (index: number, value: string) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Auto-focus to the next input
-    if (value && index < 3) {
-      otpInputs.current[index + 1]?.focus();
-    }
-  };
 
   const handleVerifyOtp = () => {
-    const fullOtp = otp.join("");
-    console.log("Verifying OTP:", fullOtp);
-    router.replace("/(auth)/create-new-password");
+    router.push("/(auth)/create-new-password");
   };
 
   return (
@@ -52,35 +38,18 @@ export default function OtpVerificationScreen() {
               Enter the 4-digit code sent to your email address.
             </Text>
 
-            <View style={styles.otpContainer}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  style={styles.otpInput}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  onChangeText={(value) => handleOtpChange(index, value)}
-                  value={digit}
-                  ref={(ref) => (otpInputs.current[index] = ref!)}
-                  autoFocus={index === 0}
-                />
-              ))}
+            <OTPFields
+              numberOfDigits={4}
+              onChange={(v) => {
+                console.log("OTP Code:", v);
+              }}
+            />
+
+            <View style={{ flex: 1, gap: 16, marginTop: 26 }}>
+              <Button onPress={handleVerifyOtp}>Verify Code</Button>
+
+              <Button variant="outline">Resend Code</Button>
             </View>
-
-            <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyOtp}>
-              <Text style={styles.verifyButtonText}>Verify Code</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.resendButton}>
-              <Text style={styles.resendButtonText}>Resend Code</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.backToLoginButton}
-              onPress={() => router.replace("/(auth)/login")}
-            >
-              <Text style={styles.backToLoginButtonText}>Back to Login</Text>
-            </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

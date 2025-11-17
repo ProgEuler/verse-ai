@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout/Layout";
+import { Button } from "@/components/ui/Button";
 import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
@@ -78,9 +79,7 @@ export default function CreateNewPasswordScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleResetPassword}>
-            <Text style={styles.loginButtonText}>Reset Password</Text>
-          </TouchableOpacity>
+          <Button onPress={handleResetPassword}>Reset Password</Button>
         </View>
       </View>
     </Layout>
