@@ -33,6 +33,9 @@ export default function OtpVerificationScreen() {
 
   React.useEffect(() => {
     getOtp(email);
+  }, []);
+
+  React.useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timer > 0) {
       interval = setInterval(() => {
@@ -64,7 +67,7 @@ export default function OtpVerificationScreen() {
       await verifyOtp({ email, otp }).unwrap();
       showToast("OTP Verified Successfully!", "success");
       setTimeout(() => {
-         router.replace("/(auth)/login");
+        router.replace("/(auth)/login");
       }, 1000);
       // Navigate to next screen or dashboard
       // router.push("/(auth)/create-new-password");
@@ -109,7 +112,7 @@ export default function OtpVerificationScreen() {
           >
             <Text style={styles.title}>OTP Verification</Text>
             <Text style={styles.subtitle}>
-              Enter the 4-digit code sent to {email || "your email address"}.
+              Enter the 4-digit code sent to {'\n' + email || "your email address"}
             </Text>
 
             <OTPFields

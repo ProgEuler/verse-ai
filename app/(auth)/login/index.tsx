@@ -2,6 +2,7 @@ import { useLoginMutation } from "@/api/auth.api";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
 import { Toast } from "@/components/ui/Toast";
+// import { useSignIn } from "@/hooks/use-google-signin";
 import { isValidEmail } from "@/utils/validation";
 import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
@@ -16,6 +17,7 @@ import {
 
 export default function LoginScreen() {
   const router = useRouter();
+//   const { signIn, name } = useSignIn()
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
