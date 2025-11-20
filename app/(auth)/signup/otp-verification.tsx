@@ -6,17 +6,20 @@ import colors from "@/constants/colors";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+   KeyboardAvoidingView,
+   Platform,
+   ScrollView,
+   StyleSheet,
+   Text,
+   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { setCredentials } from "@/store/authSlice";
+import { useDispatch } from "react-redux";
 
 export default function OtpVerificationScreen() {
   const router = useRouter();
+  const dispatch = useDispatch()
   const { email } = useLocalSearchParams<{ email: string }>();
   const [otp, setOtp] = useState("");
   const [verifyOtp, { isLoading: verifyingOTP }] =
@@ -33,7 +36,7 @@ export default function OtpVerificationScreen() {
 
   React.useEffect(() => {
     getOtp({ email });
-  }, []);
+  }, [email]);
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -64,7 +67,8 @@ export default function OtpVerificationScreen() {
   const handleVerifyOtp = async () => {
     console.log(otp);
     try {
-      await verifyOtp({ email, otp }).unwrap();
+      const res = await verifyOtp({ email, otp }).unwrap();
+      dispatch(setCredentials({ user: res.user, token: res.token }))
       showToast("OTP Verified Successfully!", "success");
       setTimeout(() => {
         router.replace("/(auth)/login");

@@ -9,12 +9,14 @@ import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+   StyleSheet,
+   Text,
+   TextInput,
+   TouchableOpacity,
+   View,
 } from "react-native";
+import { setCredentials } from "@/store/authSlice";
+import { useDispatch } from "react-redux";
 
 GoogleSignin.configure({
   scopes: [],
@@ -25,6 +27,7 @@ GoogleSignin.configure({
 
 export default function LoginScreen() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { signIn, name } = useSignIn();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -56,6 +59,7 @@ export default function LoginScreen() {
         password,
       }).unwrap();
       // console.log(res);
+      dispatch(setCredentials({ user: res.user, token: res.token }))
       showToast("Login successful!", "success");
       setTimeout(() => {
         router.replace("/(user_dashboard)/home");

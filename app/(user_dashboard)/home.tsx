@@ -9,6 +9,8 @@ import { StyleSheet, Text, View } from "react-native";
 import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import Facebook from "@/assets/svgs/facebook.svg";
 import { Layout } from "@/components/layout/Layout";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "@/store/authSlice";
 interface Appointment {
   id: string;
   time: string;
@@ -81,7 +83,8 @@ const paymentsToday: Payment[] = [
 ];
 
 export default function DashboardScreen() {
-
+   const user = useSelector(selectCurrentUser)
+   console.log("from home page -> ", user)
   return (
    <Layout>
         <View style={styles.statsRow}>
