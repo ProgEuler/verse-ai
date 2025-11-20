@@ -15,7 +15,7 @@ const Layout = () => {
         headerTitleStyle: {
           fontWeight: "bold",
         },
-        headerShadowVisible: false,     // Removes bottom border on iOS
+        headerShadowVisible: false,     // Removes bottom border on iOSr
       }}
     >
       <Stack.Screen name="welcome" options={{ headerShown: false }} />

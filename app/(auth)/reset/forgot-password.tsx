@@ -12,7 +12,7 @@ export default function ForgotPasswordScreen() {
   const handleSendOtp = () => {
     console.log("Send OTP pressed for email:", email);
     // In a real app, you would send an OTP to the email and then navigate to OTP verification
-    router.push("/(auth)/otp-verification");
+    router.push("/(auth)/reset/create-new-password");
   };
 
   return (

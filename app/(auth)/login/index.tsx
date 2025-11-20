@@ -1,4 +1,4 @@
-import { useSignupMutation } from "@/api/auth.api";
+import { useLoginMutation } from "@/api/auth.api";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
 import { Toast } from "@/components/ui/Toast";
@@ -7,24 +7,24 @@ import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+   StyleSheet,
+   Text,
+   TextInput,
+   TouchableOpacity,
+   View,
 } from "react-native";
 
-export default function SignupScreen() {
+export default function LoginScreen() {
   const router = useRouter();
-  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [toastVisible, setToastVisible] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
+  const [emailError, setEmailError] = useState<string | null>(null);
 
-  const [signup, { isLoading }] = useSignupMutation(undefined);
+  const [login, { isLoading: loading }] = useLoginMutation();
 
   const showToast = (message: string, type: "success" | "error") => {
     setToastMessage(message);
@@ -32,27 +32,26 @@ export default function SignupScreen() {
     setToastVisible(true);
   };
 
-  const handleSignup = async () => {
-    console.log("Signup pressed", { name, email, password });
+  const handleLogin = async () => {
+    if (loading) return;
 
     if (!isValidEmail(email)) {
-      showToast("Please enter a valid email address.", "error");
+      setEmailError("Please enter a valid email address.");
       return;
     }
-
+    setEmailError(null)
     try {
-      const res = await signup({ name, email, password });
-      console.log(res);
+      const res = await login({ email: email.toLowerCase(), password }).unwrap();
+      // console.log(res);
       showToast("Login successful!", "success");
       setTimeout(() => {
-        router.replace("/(auth)/login");
+        router.replace("/(user_dashboard)/home");
       }, 1000);
-    } catch (error) {
-      console.error("Error:", error);
-      const message = (error as any)?.data;
+    } catch (error: any) {
+      // console.error("Error:", error.data);
+      const message = error?.data?.non_field_errors[0] || "Login failed. Please try again.";
       showToast(message, "error");
     }
-    router.replace("/(auth)/login");
   };
 
   return (
@@ -68,19 +67,6 @@ export default function SignupScreen() {
 
         <View style={styles.form}>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your name"
-              placeholderTextColor="#A0A0A0"
-              value={name}
-              onChangeText={setName}
-              autoCapitalize="words"
-              autoComplete="name"
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
@@ -92,6 +78,7 @@ export default function SignupScreen() {
               autoCapitalize="none"
               autoComplete="email"
             />
+         { emailError && <Text style={{ color: 'red', padding: 4 }}>{emailError}</Text>}
           </View>
 
           <View style={styles.inputGroup}>
@@ -120,6 +107,24 @@ export default function SignupScreen() {
             </View>
           </View>
 
+          <TouchableOpacity
+            style={styles.forgotPassword}
+            onPress={() => router.push("/(auth)/reset/forgot-password")}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot password?</Text>
+          </TouchableOpacity>
+
+          <Button onPress={handleLogin} isLoading={loading}>
+            Login
+          </Button>
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Don&apos;t have an account? </Text>
+            <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
+              <Text style={styles.signupLink}>Signup</Text>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.dividerContainer}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>or</Text>
@@ -129,15 +134,6 @@ export default function SignupScreen() {
           <View style={styles.socialButtons}>
             <Button variant="outline">Continue with Google</Button>
             <Button variant="outline">Continue with Apple</Button>
-          </View>
-
-          <Button onPress={handleSignup}>Login</Button>
-
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
-            <TouchableOpacity onPress={() => router.push("/login")}>
-              <Text style={styles.loginLink}>Login</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -173,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   label: {
     fontSize: 14,
@@ -205,11 +201,21 @@ const styles = StyleSheet.create({
   eyeIcon: {
     padding: 4,
   },
+  forgotPassword: {
+    alignSelf: "flex-end",
+    marginTop: 0,
+    marginBottom: 18,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+    color: "#0A84FF",
+    fontWeight: "500" as const,
+  },
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 24,
-    marginTop: 32,
+    marginTop: 40,
   },
   dividerLine: {
     flex: 1,
@@ -238,14 +244,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500" as const,
   },
-  signupButton: {
+  loginButton: {
     backgroundColor: "#0A84FF",
     borderRadius: 10,
     paddingVertical: 16,
     alignItems: "center",
     marginBottom: 24,
   },
-  signupButtonText: {
+  loginButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600" as const,
@@ -260,7 +266,7 @@ const styles = StyleSheet.create({
     color: "#A0A0A0",
     fontSize: 14,
   },
-  loginLink: {
+  signupLink: {
     color: "#0A84FF",
     fontSize: 14,
     fontWeight: "500" as const,
