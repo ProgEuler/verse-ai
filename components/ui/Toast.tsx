@@ -45,9 +45,6 @@ export const Toast = ({ message, type, visible, onHide }: ToastProps) => {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 10,
-    left: 20,
-    right: 20,
     padding: 16,
     borderRadius: 12,
     flexDirection: "row",

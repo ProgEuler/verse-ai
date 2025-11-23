@@ -5,33 +5,32 @@ import { selectCurrentUser } from "@/store/authSlice";
 import { LinearGradient } from "expo-linear-gradient";
 import { usePathname, useRouter } from "expo-router";
 import {
-  BarChart3,
-  BookOpen,
-  Bot,
-  Building,
-  Calendar,
-  CreditCard,
-  FileText,
-  Grid,
-  HelpCircle,
-  LayoutDashboard,
-  LogOut,
-  MessageCircle,
-  MessageSquare,
-  Plug,
-  Settings,
-  Sparkles,
-  User,
-  Users,
-  Wallet,
+    BarChart3,
+    BookOpen,
+    Bot,
+    Building,
+    Calendar,
+    CreditCard,
+    FileText,
+    Grid,
+    HelpCircle,
+    LayoutDashboard,
+    LogOut,
+    MessageCircle,
+    MessageSquare,
+    Plug,
+    Settings,
+    User,
+    Users,
+    Wallet
 } from "lucide-react-native";
 import React from "react";
 import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -183,7 +182,7 @@ const quickActions: MenuItem[] = [
   },
 ];
 
-export default function CustomDrawerContent() {
+export default function CustomDrawerContent(props: any) {
   const router = useRouter();
   const { signIn, name } = useSignIn();
   const pathname = usePathname();
@@ -195,8 +194,8 @@ export default function CustomDrawerContent() {
   };
 
   const handleLogout = () => {
-    // signIn("signout")
-    router.replace("/login");
+    signIn("signout")
+    router.replace("/(auth)/login");
   };
 
     const isRouteActive = (route: string) => {

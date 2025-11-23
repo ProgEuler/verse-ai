@@ -6,6 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Provider } from "react-redux";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,6 +34,7 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
+         <KeyboardProvider>
         <GestureHandlerRootView>
           <StatusBar
             animated
@@ -41,6 +43,7 @@ export default function RootLayout() {
           />
           <RootLayoutNav />
         </GestureHandlerRootView>
+        </KeyboardProvider>
       </QueryClientProvider>
     </Provider>
   );

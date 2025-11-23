@@ -1,6 +1,19 @@
+import { selectCurrentUser } from "@/store/authSlice";
 import { Redirect } from "expo-router";
 import React from "react";
+import { useSelector } from "react-redux";
 
 export default function IndexScreen() {
-  return <Redirect href="/(user_dashboard)/chat-detail" />;
+  const user = useSelector(selectCurrentUser);
+  return (
+    <Redirect
+      href={
+        user?.role
+          ? user.role === "admin"
+            ? "/(admin_dashboard)/home"
+            : "/(user_dashboard)/home"
+          : "/(auth)/login"
+      }
+    />
+  );
 }

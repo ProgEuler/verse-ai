@@ -1,7 +1,7 @@
 import CustomDrawerContent from "@/components/CustomDrawerContent";
 import colors from "@/constants/colors";
 import { Drawer } from "expo-router/drawer";
-import { Menu, Grid, User, Plug, Building, BarChart3, CreditCard, Users, FileText, Wallet } from "lucide-react-native";
+import { BarChart3, Building, CreditCard, FileText, Grid, Menu, Plug, User, Users, Wallet } from "lucide-react-native";
 import React from "react";
 import { TouchableOpacity, useWindowDimensions, View } from "react-native";
 
@@ -11,7 +11,7 @@ export default function DashboardLayout() {
 
     return (
         <Drawer
-            drawerContent={(props: any) => <CustomDrawerContent {...props} />}
+            drawerContent={CustomDrawerContent}
             screenOptions={({ navigation }) => ({
                 headerShown: true,
                 headerStyle: {

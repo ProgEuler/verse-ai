@@ -61,9 +61,13 @@ export default function LoginScreen() {
       // console.log(res);
       dispatch(setCredentials({ user: res.user, token: res.token }));
       showToast("Login successful!", "success");
-      setTimeout(() => {
-        router.replace("/(user_dashboard)/home");
-      }, 1000);
+      // setTimeout(() => {
+      //   if (res.user.role === "admin") {
+      //     router.replace("/(admin_dashboard)/home");
+      //   } else {
+      //     router.replace("/(user_dashboard)/home");
+      //   }
+      // }, 1000);
     } catch (error: any) {
       // console.error("Error:", error.data);
       const message =
@@ -80,7 +84,7 @@ export default function LoginScreen() {
   return (
     <Layout>
       <Toast
-        visible={toastVisible}
+        visible={true}
         message={toastMessage}
         type={toastType}
         onHide={() => setToastVisible(false)}
