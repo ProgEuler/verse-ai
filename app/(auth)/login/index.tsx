@@ -1,6 +1,7 @@
 import { useLoginMutation } from "@/api/auth.api";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
+import { ModalView } from "@/components/ui/modal-view";
 import { Toast } from "@/components/ui/Toast";
 import { useSignIn } from "@/hooks/use-google-signin";
 import { setCredentials } from "@/store/authSlice";
@@ -10,6 +11,7 @@ import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
+  Modal,
   StyleSheet,
   Text,
   TextInput,
@@ -36,6 +38,7 @@ export default function LoginScreen() {
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [showActiveModal, setShowActiveModal] = useState<boolean>(false);
 
   const [login, { isLoading: loading }] = useLoginMutation();
 
@@ -58,21 +61,30 @@ export default function LoginScreen() {
         email: email.toLowerCase(),
         password,
       }).unwrap();
-      // console.log(res);
+      console.log(res);
       dispatch(setCredentials({ user: res.user, token: res.token }));
       showToast("Login successful!", "success");
-      // setTimeout(() => {
-      //   if (res.user.role === "admin") {
-      //     router.replace("/(admin_dashboard)/home");
-      //   } else {
-      //     router.replace("/(user_dashboard)/home");
-      //   }
-      // }, 1000);
+      setTimeout(() => {
+        if (res.user.role === "admin") {
+          router.replace("/(admin_dashboard)/home");
+        } else {
+          router.replace("/(user_dashboard)/home");
+        }
+      }, 1000);
     } catch (error: any) {
       // console.error("Error:", error.data);
       const message =
         error?.data?.non_field_errors[0] || "Login failed. Please try again.";
       showToast(message, "error");
+      console.log(message);
+      if (
+        message ===
+        "Account is not active. Please verify your email to activate your account."
+      ) {
+        setTimeout(() => {
+          setShowActiveModal(true);
+        }, 1000);
+      }
     }
   };
 
@@ -84,11 +96,37 @@ export default function LoginScreen() {
   return (
     <Layout>
       <Toast
-        visible={true}
+        visible={toastVisible}
         message={toastMessage}
         type={toastType}
         onHide={() => setToastVisible(false)}
       />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showActiveModal}
+        onRequestClose={() => {
+          setShowActiveModal(!showActiveModal);
+        }}
+      >
+        <ModalView
+          visible={showActiveModal}
+          onClose={() => {
+            setShowActiveModal(false)
+            router.push({
+              pathname: "/(auth)/signup/otp-verification",
+              params: { email },
+            });
+          }}
+          title={"Account inactive"}
+          buttonLabel="Active"
+          buttonVariant={"primary"}
+        >
+          <Text style={{ color: "white" }}>
+            Active your Account to login {"\n"}
+          </Text>
+        </ModalView>
+      </Modal>
       <View style={styles.scrollContent}>
         <Text style={styles.title}>Welcome Back!</Text>
 

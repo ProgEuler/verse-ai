@@ -24,7 +24,7 @@ export default function UsersPage() {
             <Text style={styles.headerTitle}>Admin control center</Text>
 
             <View style={styles.tableCard}>
-                <Text style={styles.cardTitle}>Admin control center</Text>
+                <Text style={styles.cardTitle}>Admin control center sort by active in active</Text>
 
                 <View style={styles.tableHeader}>
                     <Text style={[styles.headerText, styles.colName]}>Name</Text>

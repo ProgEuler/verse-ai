@@ -10,6 +10,7 @@ export function ModalView({
   children,
   buttonLabel = "Close",
   animationType = "slide",
+  buttonVariant
 }) {
   return (
     <Modal
@@ -24,7 +25,7 @@ export function ModalView({
 
           {children}
 
-          <Button variant="destructive" size="sm" onPress={onClose}>
+          <Button variant={buttonVariant} size="sm" onPress={onClose}>
             {buttonLabel}
           </Button>
         </View>
