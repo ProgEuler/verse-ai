@@ -2,9 +2,10 @@ import { useGetDashboardDataQuery } from "@/api/dashboard.api";
 import Facebook from "@/assets/svgs/facebook.svg";
 import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import { Layout } from "@/components/layout/Layout";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
 import { selectCurrentToken, selectCurrentUser } from "@/store/authSlice";
-import { Calendar, CheckCircle, MessageCircle } from "lucide-react-native";
+import { Calendar, CheckCircle, Instagram, MessageCircle } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
@@ -84,11 +85,7 @@ export default function DashboardScreen() {
   const token = useSelector(selectCurrentToken);
   const { data, isLoading } = useGetDashboardDataQuery(undefined);
   if (isLoading)
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    return <LoadingSpinner />
   console.log("data ->", data);
   //   useEffect(() => {
   //   const fetchData = async () => {
@@ -125,7 +122,7 @@ export default function DashboardScreen() {
           </View>
           <Text style={styles.statLabel}>Open Chats</Text>
           <Text style={styles.statSubLabel}>All caught up</Text>
-          <Text style={styles.statValue}>{data.open_cha}</Text>
+          <Text style={styles.statValue}>{data.open_chat}</Text>
         </View>
 
         <View style={[styles.statCard, { flex: 1 }]}>
@@ -135,7 +132,7 @@ export default function DashboardScreen() {
             <Calendar color="#10B981" size={24} />
           </View>
           <Text style={styles.statLabel}>Appointments Today</Text>
-          <Text style={styles.statSubLabel}>2 more than yesterday</Text>
+          <Text style={styles.statSubLabel}>Upcoming {data.today_meetings.remaining}</Text>
           <Text style={styles.statValue}>{data.today_meetings.count}</Text>
         </View>
       </View>
@@ -143,10 +140,11 @@ export default function DashboardScreen() {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>Appointments Today</Text>
-          <Text style={styles.cardBadge}>8 appointments</Text>
+          <Text style={styles.cardBadge}>{data.today_meetings.count} appointments</Text>
         </View>
         <View style={styles.appointmentsList}>
-          {appointmentsToday.map((appointment) => (
+          { data.today_meetings.list.length > 0 ? (
+            data.today_meetings.list.map((appointment) => (
             <View key={appointment.id} style={styles.listItem}>
               <Text style={styles.listItemTime}>{appointment.time}</Text>
               <Text style={styles.listItemName}>{appointment.name}</Text>
@@ -170,17 +168,20 @@ export default function DashboardScreen() {
                 </Text>
               </View>
             </View>
-          ))}
+          ))) : (
+            <Text style={{ color: colors.dark.text }}>No appointments today</Text>
+          )}
         </View>
       </View>
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>Payments Today</Text>
-          <Text style={styles.cardBadge}>6 Paid</Text>
+          <Text style={styles.cardBadge}>{data.today_payments.total} Paid</Text>
         </View>
         <View style={styles.paymentsList}>
-          {paymentsToday.map((payment) => (
+          {data.today_payments.list.length > 0 ? (
+            data.today_payments.list.map((payment) => (
             <View key={payment.id} style={styles.listItem}>
               <Text style={styles.paymentName}>{payment.name}</Text>
               <Text style={styles.paymentType}>{payment.type}</Text>
@@ -205,14 +206,15 @@ export default function DashboardScreen() {
                 </Text>
               </View>
             </View>
-          ))}
+          ))) : (
+            <Text style={{ color: colors.dark.text }}>No payments today</Text>
+          )}
         </View>
       </View>
 
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>Channel Status</Text>
-          <Text style={styles.cardBadge}>4 Online</Text>
         </View>
         <View style={styles.channelsList}>
           <View style={styles.channelItem}>
@@ -228,12 +230,12 @@ export default function DashboardScreen() {
           </View>
           <View style={styles.channelItem}>
             <View style={styles.channelIcon}>
-              <WhatsApp color="#25D366" width={24} height={24} />
+              <Instagram color="#25D366" width={24} height={24} />
             </View>
             <View style={styles.channelInfo}>
-              <Text style={styles.channelName}>WhatsApp</Text>
+              <Text style={styles.channelName}>Instagram</Text>
               <Text style={styles.channelStatus}>
-               {data.channel_status.facebook ? "Active" : "Inactive"}
+               {data.channel_status.instagram ? "Active" : "Inactive"}
               </Text>
             </View>
           </View>
