@@ -1,16 +1,13 @@
+import { useGetDashboardDataQuery } from "@/api/dashboard.api";
+import Facebook from "@/assets/svgs/facebook.svg";
+import WhatsApp from "@/assets/svgs/whatsapp.svg";
+import { Layout } from "@/components/layout/Layout";
 import colors from "@/constants/colors";
-import {
-  Calendar,
-  CheckCircle,
-  MessageCircle,
-} from "lucide-react-native";
+import { selectCurrentToken, selectCurrentUser } from "@/store/authSlice";
+import { Calendar, CheckCircle, MessageCircle } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import WhatsApp from "@/assets/svgs/whatsapp.svg";
-import Facebook from "@/assets/svgs/facebook.svg";
-import { Layout } from "@/components/layout/Layout";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "@/store/authSlice";
 interface Appointment {
   id: string;
   time: string;
@@ -83,152 +80,198 @@ const paymentsToday: Payment[] = [
 ];
 
 export default function DashboardScreen() {
-   const user = useSelector(selectCurrentUser)
-   console.log("from home page -> ", user)
+  const user = useSelector(selectCurrentUser);
+  const token = useSelector(selectCurrentToken);
+  const { data, isLoading } = useGetDashboardDataQuery(undefined);
+  if (isLoading)
+    return (
+      <View>
+        <Text>Loading</Text>
+      </View>
+    );
+  console.log("data ->", data);
+  //   useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch(
+  //         "https://ape-in-eft.ngrok-free.app/api/dashboard/?timezone=Asia/Dhaka",
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: "Bearer " + token,
+  //           },
+  //         }
+  //       );
+  //       console.log("token from home ->", token)
+  //       console.log("Status:", res.status);
+
+  //       const data = await res.json();
+  //       console.log("Data:", data);
+  //     } catch (error) {
+  //       console.error("ERROR:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  //   }, []);
+
   return (
-   <Layout>
-        <View style={styles.statsRow}>
-          <View style={[styles.statCard, { flex: 1 }]}>
-            <View style={styles.statIconContainer}>
-              <MessageCircle color="#F59E0B" size={24} />
-            </View>
-            <Text style={styles.statLabel}>Open Chats</Text>
-            <Text style={styles.statSubLabel}>All caught up</Text>
-            <Text style={styles.statValue}>0</Text>
+    <Layout>
+      <View style={styles.statsRow}>
+        <View style={[styles.statCard, { flex: 1 }]}>
+          <View style={styles.statIconContainer}>
+            <MessageCircle color="#F59E0B" size={24} />
           </View>
-
-          <View style={[styles.statCard, { flex: 1 }]}>
-            <View
-              style={[
-                styles.statIconContainer,
-                { backgroundColor: "#10B98120" },
-              ]}
-            >
-              <Calendar color="#10B981" size={24} />
-            </View>
-            <Text style={styles.statLabel}>Appointments Today</Text>
-            <Text style={styles.statSubLabel}>2 more than yesterday</Text>
-            <Text style={styles.statValue}>10</Text>
-          </View>
+          <Text style={styles.statLabel}>Open Chats</Text>
+          <Text style={styles.statSubLabel}>All caught up</Text>
+          <Text style={styles.statValue}>{data.open_cha}</Text>
         </View>
 
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Appointments Today</Text>
-            <Text style={styles.cardBadge}>8 appointments</Text>
+        <View style={[styles.statCard, { flex: 1 }]}>
+          <View
+            style={[styles.statIconContainer, { backgroundColor: "#10B98120" }]}
+          >
+            <Calendar color="#10B981" size={24} />
           </View>
-          <View style={styles.appointmentsList}>
-            {appointmentsToday.map((appointment) => (
-              <View key={appointment.id} style={styles.listItem}>
-                <Text style={styles.listItemTime}>{appointment.time}</Text>
-                <Text style={styles.listItemName}>{appointment.name}</Text>
-                <View
+          <Text style={styles.statLabel}>Appointments Today</Text>
+          <Text style={styles.statSubLabel}>2 more than yesterday</Text>
+          <Text style={styles.statValue}>{data.today_meetings.count}</Text>
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Appointments Today</Text>
+          <Text style={styles.cardBadge}>8 appointments</Text>
+        </View>
+        <View style={styles.appointmentsList}>
+          {appointmentsToday.map((appointment) => (
+            <View key={appointment.id} style={styles.listItem}>
+              <Text style={styles.listItemTime}>{appointment.time}</Text>
+              <Text style={styles.listItemName}>{appointment.name}</Text>
+              <View
+                style={[
+                  styles.statusBadge,
+                  appointment.status === "confirm"
+                    ? styles.statusConfirm
+                    : styles.statusPending,
+                ]}
+              >
+                <Text
                   style={[
-                    styles.statusBadge,
+                    styles.statusText,
                     appointment.status === "confirm"
-                      ? styles.statusConfirm
-                      : styles.statusPending,
+                      ? styles.statusTextConfirm
+                      : styles.statusTextPending,
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.statusText,
-                      appointment.status === "confirm"
-                        ? styles.statusTextConfirm
-                        : styles.statusTextPending,
-                    ]}
-                  >
-                    {appointment.status === "confirm" ? "Confirm" : "Pending"}
-                  </Text>
-                </View>
+                  {appointment.status === "confirm" ? "Confirm" : "Pending"}
+                </Text>
               </View>
-            ))}
-          </View>
+            </View>
+          ))}
         </View>
+      </View>
 
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Payments Today</Text>
-            <Text style={styles.cardBadge}>6 Paid</Text>
-          </View>
-          <View style={styles.paymentsList}>
-            {paymentsToday.map((payment) => (
-              <View key={payment.id} style={styles.listItem}>
-                <Text style={styles.paymentName}>{payment.name}</Text>
-                <Text style={styles.paymentType}>{payment.type}</Text>
-                <Text style={styles.paymentAmount}>{payment.amount}</Text>
-                <View
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Payments Today</Text>
+          <Text style={styles.cardBadge}>6 Paid</Text>
+        </View>
+        <View style={styles.paymentsList}>
+          {paymentsToday.map((payment) => (
+            <View key={payment.id} style={styles.listItem}>
+              <Text style={styles.paymentName}>{payment.name}</Text>
+              <Text style={styles.paymentType}>{payment.type}</Text>
+              <Text style={styles.paymentAmount}>{payment.amount}</Text>
+              <View
+                style={[
+                  styles.statusBadge,
+                  payment.status === "confirm"
+                    ? styles.statusConfirm
+                    : styles.statusPending,
+                ]}
+              >
+                <Text
                   style={[
-                    styles.statusBadge,
+                    styles.statusText,
                     payment.status === "confirm"
-                      ? styles.statusConfirm
-                      : styles.statusPending,
+                      ? styles.statusTextConfirm
+                      : styles.statusTextPending,
                   ]}
                 >
-                  <Text
-                    style={[
-                      styles.statusText,
-                      payment.status === "confirm"
-                        ? styles.statusTextConfirm
-                        : styles.statusTextPending,
-                    ]}
-                  >
-                    {payment.status === "confirm" ? "Confirm" : "Pending"}
-                  </Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Channel Status</Text>
-            <Text style={styles.cardBadge}>4 Online</Text>
-          </View>
-          <View style={styles.channelsList}>
-            <View style={styles.channelItem}>
-              <View style={styles.channelIcon}>
-                <WhatsApp color="#25D366" width={24} height={24} />
-              </View>
-              <View style={styles.channelInfo}>
-                <Text style={styles.channelName}>WhatsApp</Text>
-                <Text style={styles.channelStatus}>Active</Text>
+                  {payment.status === "confirm" ? "Confirm" : "Pending"}
+                </Text>
               </View>
             </View>
-            <View style={styles.channelItem}>
-              <View style={styles.channelIcon}>
-                <Facebook color="#1877F2" width={24} height={24} />
-              </View>
-              <View style={styles.channelInfo}>
-                <Text style={styles.channelName}>Facebook</Text>
-                <Text style={styles.channelStatus}>Active</Text>
-              </View>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Channel Status</Text>
+          <Text style={styles.cardBadge}>4 Online</Text>
+        </View>
+        <View style={styles.channelsList}>
+          <View style={styles.channelItem}>
+            <View style={styles.channelIcon}>
+              <WhatsApp color="#25D366" width={24} height={24} />
+            </View>
+            <View style={styles.channelInfo}>
+              <Text style={styles.channelName}>WhatsApp</Text>
+              <Text style={styles.channelStatus}>
+                {data.channel_status.whatsapp ? "Active" : "Inactive"}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.channelItem}>
+            <View style={styles.channelIcon}>
+              <WhatsApp color="#25D366" width={24} height={24} />
+            </View>
+            <View style={styles.channelInfo}>
+              <Text style={styles.channelName}>WhatsApp</Text>
+              <Text style={styles.channelStatus}>
+               {data.channel_status.facebook ? "Active" : "Inactive"}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.channelItem}>
+            <View style={styles.channelIcon}>
+              <Facebook color="#1877F2" width={24} height={24} />
+            </View>
+            <View style={styles.channelInfo}>
+              <Text style={styles.channelName}>Facebook</Text>
+              <Text style={styles.channelStatus}>
+               {data.channel_status.instagram ? "Active" : "Inactive"}
+              </Text>
             </View>
           </View>
         </View>
+      </View>
 
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Notifications/Alerts</Text>
-            <Text
-              style={[
-                styles.cardBadge,
-                { backgroundColor: colors.dark.success + "20" },
-              ]}
-            >
-              All systems normal
-            </Text>
-          </View>
-          <View style={styles.alertContainer}>
-            <CheckCircle color={colors.dark.success} size={48} />
-            <Text style={styles.alertTitle}>No issues detected</Text>
-            <Text style={styles.alertSubtitle}>
-              All systems are running smoothly
-            </Text>
-          </View>
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Notifications/Alerts</Text>
+          <Text
+            style={[
+              styles.cardBadge,
+              { backgroundColor: colors.dark.success + "20" },
+            ]}
+          >
+            All systems normal
+          </Text>
         </View>
-        </Layout>
+        <View style={styles.alertContainer}>
+          <CheckCircle color={colors.dark.success} size={48} />
+          <Text style={styles.alertTitle}>No issues detected</Text>
+          <Text style={styles.alertSubtitle}>
+            All systems are running smoothly
+          </Text>
+        </View>
+      </View>
+    </Layout>
   );
 }
 

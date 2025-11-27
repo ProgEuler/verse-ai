@@ -11,12 +11,12 @@ import { useRouter } from "expo-router";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Modal,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -61,20 +61,18 @@ export default function LoginScreen() {
         email: email.toLowerCase(),
         password,
       }).unwrap();
-      console.log(res);
-      dispatch(setCredentials({ user: res.user, token: res.token }));
+      console.log("Login response:", res);
+      dispatch(setCredentials({ user: res.user, token: res.access }));
       showToast("Login successful!", "success");
-      setTimeout(() => {
         if (res.user.role === "admin") {
           router.replace("/(admin_dashboard)/home");
         } else {
           router.replace("/(user_dashboard)/home");
         }
-      }, 1000);
     } catch (error: any) {
-      // console.error("Error:", error.data);
+      console.error("Login Error:", error);
       const message =
-        error?.data?.non_field_errors[0] || "Login failed. Please try again.";
+        error?.data?.non_field_errors?.[0] || "Login failed. Please try again.";
       showToast(message, "error");
       console.log(message);
       if (

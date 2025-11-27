@@ -1,7 +1,7 @@
 import CustomDrawerContent from "@/components/CustomDrawerContent";
 import colors from "@/constants/colors";
 import { Drawer } from "expo-router/drawer";
-import { BarChart3, Building, CreditCard, FileText, Grid, Menu, Plug, User, Users, Wallet } from "lucide-react-native";
+import { BarChart3, BookOpen, Bot, Calendar, Grid, HelpCircle, Menu, MessageCircle, Plug, Settings, Users } from "lucide-react-native";
 import React from "react";
 import { TouchableOpacity, useWindowDimensions, View } from "react-native";
 
@@ -50,11 +50,38 @@ export default function DashboardLayout() {
             />
 
             <Drawer.Screen
-                name="users"
+                name="appointments"
                 options={{
-                    drawerLabel: "Users",
-                    title: "Users",
-                    drawerIcon: ({ color, size }) => <User color={color} size={size} />,
+                    drawerLabel: "Appointments",
+                    title: "Appointments",
+                    drawerIcon: ({ color, size }) => <Calendar color={color} size={size} />,
+                }}
+            />
+
+            <Drawer.Screen
+                name="chat-history"
+                options={{
+                    drawerLabel: "Chat History",
+                    title: "Chat History",
+                    drawerIcon: ({ color, size }) => <MessageCircle color={color} size={size} />,
+                }}
+            />
+
+            <Drawer.Screen
+                name="ai-assistant"
+                options={{
+                    drawerLabel: "AI Assistant",
+                    title: "AI Assistant",
+                    drawerIcon: ({ color, size }) => <Bot color={color} size={size} />,
+                }}
+            />
+
+            <Drawer.Screen
+                name="analytics"
+                options={{
+                    drawerLabel: "Analytics",
+                    title: "Analytics",
+                    drawerIcon: ({ color, size }) => <BarChart3 color={color} size={size} />,
                 }}
             />
 
@@ -68,33 +95,6 @@ export default function DashboardLayout() {
             />
 
             <Drawer.Screen
-                name="company-profile"
-                options={{
-                    drawerLabel: "Company Profile",
-                    title: "Company Profile",
-                    drawerIcon: ({ color, size }) => <Building color={color} size={size} />,
-                }}
-            />
-
-            <Drawer.Screen
-                name="performance"
-                options={{
-                    drawerLabel: "Performance & Analytics",
-                    title: "Performance & Analytics",
-                    drawerIcon: ({ color, size }) => <BarChart3 color={color} size={size} />,
-                }}
-            />
-
-            <Drawer.Screen
-                name="subscription"
-                options={{
-                    drawerLabel: "Subscription Management",
-                    title: "Subscription Management",
-                    drawerIcon: ({ color, size }) => <CreditCard color={color} size={size} />,
-                }}
-            />
-
-            <Drawer.Screen
                 name="team"
                 options={{
                     drawerLabel: "Team",
@@ -104,20 +104,37 @@ export default function DashboardLayout() {
             />
 
             <Drawer.Screen
-                name="overview"
+                name="knowledge-base"
                 options={{
-                    drawerLabel: "Overview",
-                    title: "Overview",
-                    drawerIcon: ({ color, size }) => <FileText color={color} size={size} />,
+                    drawerLabel: "Knowledge Base",
+                    title: "Knowledge Base",
+                    drawerIcon: ({ color, size }) => <BookOpen color={color} size={size} />,
                 }}
             />
 
             <Drawer.Screen
-                name="payment"
+                name="settings"
                 options={{
-                    drawerLabel: "Payment & Report",
-                    title: "Payment & Report",
-                    drawerIcon: ({ color, size }) => <Wallet color={color} size={size} />,
+                    drawerLabel: "Settings",
+                    title: "Settings",
+                    drawerIcon: ({ color, size }) => <Settings color={color} size={size} />,
+                }}
+            />
+
+            <Drawer.Screen
+                name="support"
+                options={{
+                    drawerLabel: "Support",
+                    title: "Support",
+                    drawerIcon: ({ color, size }) => <HelpCircle color={color} size={size} />,
+                }}
+            />
+
+            <Drawer.Screen
+                name="add-appointment"
+                options={{
+                    drawerItemStyle: { display: "none" },
+                    title: "Add Appointment",
                 }}
             />
             <Drawer.Screen

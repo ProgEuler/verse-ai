@@ -48,12 +48,9 @@ const generateCalendarDays = (year: number, month: number) => {
 
 export default function AppointmentsScreen() {
   const router = useRouter();
-  // Set initial date to October 2025 to match the design
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 9, 1)); // October 2025
-  const [selectedDate, setSelectedDate] = useState(new Date(2025, 9, 12)); // October 12, 2025
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 9, 1));
+  const [selectedDate, setSelectedDate] = useState(new Date(2025, 9, 12));
   const [viewMode, setViewMode] = useState<"today" | "week" | "month">("month");
-
-  // Mock "today" date for the app (October 7, 2025 in the design)
   const mockToday = new Date(2025, 9, 7);
 
   const currentYear = currentDate.getFullYear();
@@ -112,7 +109,6 @@ export default function AppointmentsScreen() {
 
   const isToday = (day: number, isCurrentMonth: boolean) => {
     if (!isCurrentMonth) return false;
-    // Use mockToday for design purposes (October 7, 2025)
     return (
       day === mockToday.getDate() &&
       currentMonth === mockToday.getMonth() &&
@@ -170,7 +166,7 @@ export default function AppointmentsScreen() {
       {/* add appointment */}
       <View style={{ marginBottom: 20 }}>
         <Button
-          onPress={() => router.push("/(dashboard)/add-appointment")}
+          onPress={() => router.push("/(user_dashboard)/add-appointment")}
           variant="small"
           size="sm"
         >
