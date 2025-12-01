@@ -1,3 +1,4 @@
+import colors from "@/constants/colors";
 import { AlertCircle, CheckCircle } from "lucide-react-native";
 import React, { useEffect } from "react";
 import { StyleSheet, Text } from "react-native";
@@ -27,28 +28,32 @@ export const Toast = ({ message, type, visible, onHide }: ToastProps) => {
 
   if (!visible) return null;
 
-  const backgroundColor = type === "success" ? "#10B981" : "#EF4444";
+  const color = type === "success" ? "#10B981" : "#EF4444";
   const Icon = type === "success" ? CheckCircle : AlertCircle;
 
   return (
     <Animated.View
       entering={FadeInUp.springify()}
       exiting={FadeOutUp}
-      style={[styles.container, { backgroundColor }]}
+      style={styles.container}
     >
-      <Icon color="#FFFFFF" size={24} />
-      <Text style={styles.message}>{message}</Text>
+      <Icon color={color} size={24} />
+      <Text style={[styles.message, { color }]}>{message}</Text>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    width: "70%",
+    borderWidth: 1,
+    borderColor: "#fff",
     position: "absolute",
-    padding: 16,
+    padding: 12,
     borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 12,
     zIndex: 1000,
     shadowColor: "#000",
@@ -61,9 +66,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   message: {
-    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "500",
-    flex: 1,
   },
 });

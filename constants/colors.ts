@@ -14,6 +14,12 @@ export default {
     gradientStart: '#6366F1',
     gradientEnd: '#EC4899',
   },
+  socials: {
+      facebook: '#1877F2',
+      twitter: '#1DA1F2',
+      instagram: '#C13584',
+      whatsapp: '#25D366',
+  }
 };
 
 export const COLORS = {

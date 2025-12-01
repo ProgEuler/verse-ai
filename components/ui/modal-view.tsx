@@ -20,7 +20,7 @@ export function ModalView({
       onRequestClose={onClose}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+        <View style={styles.modalView} className="bg-white">
           {title && <Text style={styles.modalText}>{title}</Text>}
 
           {children}
@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: colors.dark.cardBackground,
-    borderRadius: 30,
-    padding: 30,
+    borderRadius: 20,
+    padding: 20,
     alignItems: "center",
-    width: "80%",
+    width: "90%",
   },
   modalText: {
     color: "white",

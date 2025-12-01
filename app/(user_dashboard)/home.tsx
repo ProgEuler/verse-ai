@@ -109,8 +109,8 @@ export default function DashboardScreen() {
         </View>
         <View style={styles.appointmentsList}>
           {data.today_meetings.list.length > 0 ? (
-            data.today_meetings.list.map((appointment) => (
-              <View key={appointment.id} style={styles.listItem}>
+            data.today_meetings.list.map((appointment, index) => (
+              <View key={index} style={styles.listItem}>
                 <Text style={styles.listItemTime}>
                   {formatTime(appointment.start_time)}
                 </Text>
@@ -205,7 +205,7 @@ export default function DashboardScreen() {
           </View>
           <View style={styles.channelItem}>
             <View style={styles.channelIcon}>
-              <Facebook color="#1877F2" width={24} height={24} />
+              <Facebook color="#25D366" width={24} height={24} />
             </View>
             <View style={styles.channelInfo}>
               <Text style={styles.channelName}>Facebook</Text>

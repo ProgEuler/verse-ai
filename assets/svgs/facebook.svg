@@ -1,12 +1,1 @@
-<svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="28.9385" height="28.9385" rx="14.4692" fill="#D9D9D9"/>
-<g clip-path="url(#clip0_430_21313)">
-<path d="M24.3362 14.4694C24.3362 9.02092 19.9193 4.604 14.4709 4.604C9.02239 4.604 4.60547 9.02092 4.60547 14.4694C4.60547 19.3934 8.21312 23.4749 12.9294 24.2149V17.3211H10.4245V14.4694H12.9294V12.2959C12.9294 9.82341 14.4023 8.45767 16.6557 8.45767C17.7351 8.45767 18.864 8.65035 18.864 8.65035V11.0782H17.6201C16.3945 11.0782 16.0123 11.8386 16.0123 12.6189V14.4694H18.7484L18.311 17.3211H16.0123V24.2149C20.7286 23.4749 24.3362 19.3935 24.3362 14.4694Z" fill="#1877F2"/>
-<path d="M18.3123 17.321L18.7497 14.4692H16.0136V12.6187C16.0136 11.8384 16.3958 11.078 17.6213 11.078H18.8653V8.6502C18.8653 8.6502 17.7363 8.45752 16.6569 8.45752C14.4035 8.45752 12.9307 9.82326 12.9307 12.2958V14.4692H10.4258V17.321H12.9307V24.2148C13.4406 24.2947 13.956 24.3347 14.4721 24.3346C14.9883 24.3347 15.5037 24.2947 16.0136 24.2148V17.321H18.3123Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_430_21313">
-<rect width="19.7308" height="19.7308" fill="white" transform="translate(4.60547 4.604)"/>
-</clipPath>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-facebook"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" /></svg>

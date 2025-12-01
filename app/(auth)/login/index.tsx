@@ -93,12 +93,15 @@ export default function LoginScreen() {
 
   return (
     <Layout>
+      <View style={{ flex: 1, alignItems: "center"}}>
+
       <Toast
         visible={toastVisible}
         message={toastMessage}
         type={toastType}
         onHide={() => setToastVisible(false)}
-      />
+        />
+        </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -216,13 +219,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  keyboardView: {
-    flex: 1,
-  },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingHorizontal: 12,
     paddingBottom: 40,
   },
   title: {

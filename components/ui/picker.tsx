@@ -1,27 +1,28 @@
 import { useState } from "react";
 import {
-  Dimensions,
-  FlatList,
-  Modal,
-  Pressable,
-  TouchableOpacity,
-  View,
+    Dimensions,
+    FlatList,
+    Modal,
+    Pressable,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
+    Extrapolate,
+    interpolate,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
 } from "react-native-reanimated";
 
 import colors, { COLORS } from "@/constants/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ArrowDown } from "lucide-react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+// import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RNInput } from "./input";
-import { RNText } from "./text";
+// import { RNText } from "./text";
 
 type Props = {
   label?: string;
@@ -34,7 +35,8 @@ const height = Dimensions.get("window").height;
 const marginTop = 8;
 
 export function RNPicker({ onSelectItem, label, value, items }: Props) {
-  const { bottom } = useSafeAreaInsets();
+  // const { bottom } = useSafeAreaInsets();
+  const bottom = 20;
   const [showPicker, setShowPicker] = useState(false);
   const animationDriver = useSharedValue(0);
 
@@ -93,10 +95,10 @@ export function RNPicker({ onSelectItem, label, value, items }: Props) {
         paddingHorizontal: 8,
         borderRadius: 10,
         backgroundColor:
-          value === item.label ? colors.dark.primary + "22" : "transparent",
+          value === item.label ? colors.dark.primary : "transparent",
       }}
     >
-      <RNText
+      <Text
         style={{
           color: COLORS.text,
           fontSize: 16,
@@ -105,7 +107,7 @@ export function RNPicker({ onSelectItem, label, value, items }: Props) {
         }}
       >
         {item.label}
-      </RNText>
+      </Text>
     </TouchableOpacity>
   );
 
@@ -129,7 +131,7 @@ export function RNPicker({ onSelectItem, label, value, items }: Props) {
           editable={false}
           marginTop={marginTop}
         />
-        <ArrowDown
+        {/* <ArrowDown
           style={{
             position: "absolute",
             right: 8,
@@ -138,8 +140,8 @@ export function RNPicker({ onSelectItem, label, value, items }: Props) {
             zIndex: 99
           }}
           size={22}
-          color={colors.dark.border}
-        />
+          color={colors.dark.primary}
+        /> */}
       </Pressable>
 
       <Modal
@@ -202,7 +204,7 @@ export function RNPicker({ onSelectItem, label, value, items }: Props) {
                 marginBottom: 12,
               }}
             >
-              <RNText
+              <Text
                 style={{
                   fontSize: 16,
                   fontWeight: "600",
@@ -210,7 +212,7 @@ export function RNPicker({ onSelectItem, label, value, items }: Props) {
                 }}
               >
                 {"Select"}
-              </RNText>
+              </Text>
               <TouchableOpacity onPress={closeModal} activeOpacity={0.7}>
                 <AntDesign name="close" size={24} color={COLORS.text} />
               </TouchableOpacity>

@@ -24,6 +24,7 @@
       "package": "com.betopia.jvai.verseai"
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },

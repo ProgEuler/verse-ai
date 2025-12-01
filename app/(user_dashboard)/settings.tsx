@@ -32,6 +32,7 @@ export default function Settings() {
           onClose={() => setDeleteAcc(false)}
           title={"Delete Account?"}
           buttonLabel="Close"
+          buttonVariant={"destructive"}
         >
           <Text style={styles.modalText}>
             Are you sure you want to delete your account? {'\n'}
@@ -39,10 +40,6 @@ export default function Settings() {
           </Text>
         </ModalView>
       </Modal>
-
-      <View>
-
-      </View>
       {/* Security Section */}
       <Text style={styles.sectionTitle}>Security</Text>
 

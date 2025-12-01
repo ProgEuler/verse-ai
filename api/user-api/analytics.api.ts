@@ -10,7 +10,9 @@ export const analyticsApi = baseApi.injectEndpoints({
         if(channel) params.append("channel", channel);
         if(type) params.append("type", type);
 
-        return `analytics/?timezone=Asia/Dhaka&${params.toString()}`;
+        console.log(`analytics/?${params.toString()}&timezone=Asia/Dhaka`)
+        return `analytics/?${params.toString()}&timezone=Asia/Dhaka`;
+      // return "analytics/?timezone=Asia/Dhaka"
       },
     }),
   }),

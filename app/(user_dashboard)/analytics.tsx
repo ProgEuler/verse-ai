@@ -1,111 +1,60 @@
 import { useGetAnalyticsDataQuery } from "@/api/user-api/analytics.api";
+import Facebook from "@/assets/svgs/facebook.svg";
+import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import { Layout } from "@/components/layout/Layout";
-import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { RNPicker } from "@/components/ui/picker";
 import colors from "@/constants/colors";
 import {
   Calendar,
   Camera,
+  DollarSign,
   FileText,
+  Instagram,
   MessageCircle,
   TrendingUp,
+  User2,
 } from "lucide-react-native";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Svg, { G, Path, Text as SvgText } from "react-native-svg";
+import PieChart from "react-native-pie-chart";
 interface PieChartData {
   label: string;
   value: number;
   color: string;
+  icon: React.ReactNode;
 }
 interface PieChartProps {
   data: PieChartData[];
   size?: number;
 }
 
-const PieChart: React.FC<PieChartProps> = ({ data, size = 200 }) => {
-  const total = data.reduce((sum, item) => sum + item.value, 0);
-  let currentAngle = -90; // Start from top
+const widthAndHeight = 200;
 
-  const radius = size / 2 - 20;
-  const centerX = size / 2;
-  const centerY = size / 2;
-
-  const createPath = (value: number, startAngle: number) => {
-    const percentage = value / total;
-    const angle = percentage * 360;
-    const endAngle = startAngle + angle;
-
-    const startAngleRad = (startAngle * Math.PI) / 180;
-    const endAngleRad = (endAngle * Math.PI) / 180;
-
-    const x1 = centerX + radius * Math.cos(startAngleRad);
-    const y1 = centerY + radius * Math.sin(startAngleRad);
-    const x2 = centerX + radius * Math.cos(endAngleRad);
-    const y2 = centerY + radius * Math.sin(endAngleRad);
-
-    const largeArcFlag = angle > 180 ? 1 : 0;
-
-    return `M ${centerX} ${centerY} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
-  };
-
-  return (
-    <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {data.map((item, index) => {
-        const percentage = item.value / total;
-        const angle = percentage * 360;
-        const path = createPath(item.value, currentAngle);
-        const startAngle = currentAngle;
-        currentAngle += angle;
-
-        // Calculate label position
-        const midAngle = startAngle + angle / 2;
-        const midAngleRad = (midAngle * Math.PI) / 180;
-        const labelRadius = radius * 0.7;
-        const labelX = centerX + labelRadius * Math.cos(midAngleRad);
-        const labelY = centerY + labelRadius * Math.sin(midAngleRad);
-
-        return (
-          <G key={index}>
-            <Path d={path} fill={item.color} />
-            {percentage > 0.15 && (
-              <SvgText
-                x={labelX}
-                y={labelY}
-                fontSize="12"
-                fontWeight="600"
-                fill={colors.dark.text}
-                textAnchor="middle"
-                alignmentBaseline="middle"
-              >
-                {item.label} {item.value}
-              </SvgText>
-            )}
-          </G>
-        );
-      })}
-    </Svg>
-  );
-};
+const series = [
+  { value: 10, color: colors.socials.facebook },
+  { value: 0, color: "#ffb300" },
+  { value: 5, color: colors.socials.instagram },
+  { value: 10, color: colors.socials.whatsapp },
+];
 
 export default function AnalyticsScreen() {
-  const [timeRange, setTimeRange] = useState("Today");
-  const [channel, setChannel] = useState("All Channel");
-  const [messageType, setMessageType] = useState("All Message");
+  const [timeRange, setTimeRange] = useState("today");
+  const [channel, setChannel] = useState("all_channel");
+  const [messageType, setMessageType] = useState("all_message");
   const [filters, setFilters] = useState({
     time: "",
     channel: "",
     type: "",
   });
-  const {data, isLoading} = useGetAnalyticsDataQuery({
+  const { data, isLoading } = useGetAnalyticsDataQuery({
     time: timeRange,
     channel: channel,
     type: messageType,
-  })
+  });
 
-  if(isLoading) return <LoadingSpinner />
-  console.log("analytics data: ", data)
+  if (isLoading) return <LoadingSpinner />;
+  console.log("analytics data: ", data);
   const timeRangeLabelMap: Record<string, string> = {
     today: "Today",
     this_week: "This Week",
@@ -126,11 +75,28 @@ export default function AnalyticsScreen() {
   };
 
   const channelData: PieChartData[] = [
-    { label: "WhatsApp", value: 45, color: "#FBBF24" }, // Yellow
-    { label: "Facebook", value: 30, color: "#1877F2" }, // Blue
-    { label: "Instagram", value: 15, color: "#10B981" }, // Green
-    { label: "Webchat", value: 10, color: "#EC4899" }, // Pink
-  ];
+    {
+      label: "WhatsApp",
+      value: data?.channel_messages?.whatsapp ?? 0,
+      // value: 20,
+      color: colors.socials.whatsapp,
+      icon: <WhatsApp color={"#fff"} width={16} />,
+    },
+    {
+      label: "Facebook",
+      value: data?.channel_messages?.facebook ?? 0,
+      // value: 30,
+      color: colors.socials.facebook,
+      icon: <Facebook color={"#fff"} width={16} />,
+    },
+    {
+      label: "Instagram",
+      value: data?.channel_messages?.instagram ?? 0,
+      // value: 50,
+      color: colors.socials.instagram,
+      icon: <Instagram color={"#fff"} width={16} />,
+    },
+  ].filter((item) => item.value > 0);
 
   const topQuestions = [
     { question: "What are your business hours?", count: 142 },
@@ -140,14 +106,10 @@ export default function AnalyticsScreen() {
     { question: "Where is your location?", count: 12 },
   ];
 
-  const handleFilter = () => {
-   console.log("start filtering...")
-  }
   return (
     <Layout>
-
       {/* Filters Section */}
-      <View style={styles.filtersContainer}>
+      <View>
         <View style={styles.filterRow}>
           <View style={styles.filterItem}>
             {/* <Text style={styles.filterLabel}>Time Range</Text> */}
@@ -204,30 +166,56 @@ export default function AnalyticsScreen() {
           </View>
         </View>
 
-        <Button onPress={handleFilter}>Aplly Filters</Button>
+        {/* <Button onPress={handleFilter}>Aplly Filters</Button> */}
       </View>
 
-      {/* Key Metrics */}
-      <View style={styles.metricsRow}>
-        <View style={[styles.metricCard, { flex: 1 }]}>
-          <View style={styles.metricIconContainer}>
-            <MessageCircle color={colors.dark.primary} size={24} />
+      {/* stat */}
+      <View style={{ marginBottom: 6 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 6,
+          }}
+        >
+          <View style={styles.metricCard}>
+            <View>
+              <MessageCircle color={colors.dark.primary} size={24} />
+            </View>
+            <Text style={styles.metricValue}>{data?.message_count}</Text>
+            <Text style={styles.metricLabel}>Messages Received</Text>
           </View>
-          <Text style={styles.metricValue}>24</Text>
-          <Text style={styles.metricLabel}>Messages Received</Text>
-        </View>
 
-        <View style={[styles.metricCard, { flex: 1 }]}>
-          <View
-            style={[
-              styles.metricIconContainer,
-              { backgroundColor: colors.dark.success + "20" },
-            ]}
-          >
-            <Calendar color={colors.dark.success} size={24} />
+          <View style={styles.metricCard}>
+            <View>
+              <Calendar color={colors.dark.success} size={24} />
+            </View>
+            <Text style={styles.metricValue}>{data?.booking_count}</Text>
+            <Text style={styles.metricLabel}>Appointments Booked</Text>
           </View>
-          <Text style={styles.metricValue}>10</Text>
-          <Text style={styles.metricLabel}>Appointments Booked</Text>
+
+          <View style={styles.metricCard}>
+            <View>
+              <DollarSign color={colors.dark.primaryLight} size={24} />
+            </View>
+            <Text style={styles.metricValue}>{data?.total_revenue}</Text>
+            <Text style={styles.metricLabel}>Total Revenue</Text>
+          </View>
+
+          <View style={styles.metricCard}>
+            <View>
+              <User2 color={colors.dark.warning} size={24} />
+            </View>
+            <Text style={styles.metricValue}>{data?.new_customers}</Text>
+            <Text style={styles.metricLabel}>New Customers</Text>
+          </View>
+          <View style={styles.metricCard}>
+            <View>
+              <MessageCircle color={colors.dark.danger} size={24} />
+            </View>
+            <Text style={styles.metricValue}>{data?.unanswered_messages}</Text>
+            <Text style={styles.metricLabel}>Unanswered Message</Text>
+          </View>
         </View>
       </View>
 
@@ -242,7 +230,8 @@ export default function AnalyticsScreen() {
 
         <View style={styles.chartContainer}>
           <View style={styles.chartWrapper}>
-            <PieChart data={channelData} size={200} />
+            {/* <PieCharts data={pieData} size={200} /> */}
+            <PieChart widthAndHeight={widthAndHeight} series={series} />
           </View>
 
           <View style={styles.legendContainer}>
@@ -250,7 +239,9 @@ export default function AnalyticsScreen() {
               <View key={index} style={styles.legendItem}>
                 <View
                   style={[styles.legendColor, { backgroundColor: item.color }]}
-                />
+                >
+                  {item.icon}
+                </View>
                 <Text style={styles.legendLabel}>{item.label}</Text>
               </View>
             ))}
@@ -350,67 +341,23 @@ export default function AnalyticsScreen() {
 }
 
 const styles = StyleSheet.create({
-  pageTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: colors.dark.text,
-    marginBottom: 24,
-  },
-  filtersContainer: {
-    marginBottom: 24,
-  },
   filterRow: {
     flexDirection: "row",
     gap: 6,
-    marginBottom: 16,
+    marginBottom: 12,
   },
   filterItem: {
     flex: 1,
   },
-  filterLabel: {
-    fontSize: 12,
-    color: colors.dark.textSecondary,
-    marginBottom: 8,
-    fontWeight: "500",
-  },
-  filterDropdown: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: colors.dark.cardBackground,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-  },
-  filterValue: {
-    fontSize: 14,
-    color: colors.dark.text,
-    fontWeight: "500",
-  },
-  metricsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 24,
-  },
   metricCard: {
+    width: "48%",
     backgroundColor: colors.dark.cardBackground,
     borderRadius: 12,
-    padding: 16,
+    padding: 10,
     borderWidth: 1,
     borderColor: colors.dark.border,
     alignItems: "center",
-  },
-  metricIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.dark.primary + "20",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12,
-    position: "relative",
+    flex: 1,
   },
   profileAvatarSmall: {
     position: "absolute",
@@ -424,13 +371,13 @@ const styles = StyleSheet.create({
     borderColor: colors.dark.cardBackground,
   },
   metricValue: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "700",
     color: colors.dark.text,
     marginBottom: 4,
   },
   metricLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: colors.dark.textSecondary,
     textAlign: "center",
   },
@@ -477,9 +424,12 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   legendColor: {
-    width: 16,
-    height: 16,
+    width: 20,
+    height: 20,
+    padding: 2,
     borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
   },
   legendLabel: {
     fontSize: 14,
