@@ -24,29 +24,14 @@ interface PieChartData {
   color: string;
   icon: React.ReactNode;
 }
-interface PieChartProps {
-  data: PieChartData[];
-  size?: number;
-}
 
 const widthAndHeight = 200;
 
-const series = [
-  { value: 10, color: colors.socials.facebook },
-  { value: 0, color: "#ffb300" },
-  { value: 5, color: colors.socials.instagram },
-  { value: 10, color: colors.socials.whatsapp },
-];
-
 export default function AnalyticsScreen() {
-  const [timeRange, setTimeRange] = useState("today");
+  const [timeRange, setTimeRange] = useState("all");
   const [channel, setChannel] = useState("all_channel");
   const [messageType, setMessageType] = useState("all_message");
-  const [filters, setFilters] = useState({
-    time: "",
-    channel: "",
-    type: "",
-  });
+
   const { data, isLoading } = useGetAnalyticsDataQuery({
     time: timeRange,
     channel: channel,
@@ -55,7 +40,9 @@ export default function AnalyticsScreen() {
 
   if (isLoading) return <LoadingSpinner />;
   console.log("analytics data: ", data);
+
   const timeRangeLabelMap: Record<string, string> = {
+    all: "All Time",
     today: "Today",
     this_week: "This Week",
     this_month: "This Month",
@@ -74,29 +61,71 @@ export default function AnalyticsScreen() {
     outgoing: "Outgoing",
   };
 
+  const totalMessages =
+    (data?.message_count?.platforms?.facebook ?? 0) +
+    (data?.message_count?.platforms?.instagram ?? 0) +
+    (data?.message_count?.platforms?.whatsapp ?? 0);
+
+  const series =
+    totalMessages === 0
+      ? [
+          {
+            value: 1,
+            color: "#6B7280",
+            label: {
+              text: "No messages",
+              fontSize: 12,
+              fontWeight: "bold",
+              outline: "white",
+              fill: "#FFFFFF",
+            },
+          },
+        ]
+      : [
+          {
+            value: data?.message_count?.platforms?.facebook,
+            color: colors.socials.facebook,
+            label: {
+              text: "Facebook",
+              fontWeight: "bold",
+              outline: "white",
+            },
+          },
+          {
+            value: data?.message_count?.platforms?.instagram,
+            color: colors.socials.instagram,
+            label: { text: "Instagram", fontWeight: "bold" },
+          },
+          {
+            value: data?.message_count?.platforms?.whatsapp,
+            color: colors.socials.whatsapp,
+            label: {
+              text: `${data?.message_count?.platforms?.whatsapp}%`,
+              fontWeight: "bold",
+            },
+          },
+        ];
+
   const channelData: PieChartData[] = [
     {
       label: "WhatsApp",
       value: data?.channel_messages?.whatsapp ?? 0,
-      // value: 20,
       color: colors.socials.whatsapp,
       icon: <WhatsApp color={"#fff"} width={16} />,
     },
     {
       label: "Facebook",
       value: data?.channel_messages?.facebook ?? 0,
-      // value: 30,
       color: colors.socials.facebook,
       icon: <Facebook color={"#fff"} width={16} />,
     },
     {
       label: "Instagram",
       value: data?.channel_messages?.instagram ?? 0,
-      // value: 50,
       color: colors.socials.instagram,
       icon: <Instagram color={"#fff"} width={16} />,
     },
-  ].filter((item) => item.value > 0);
+  ];
 
   const topQuestions = [
     { question: "What are your business hours?", count: 142 },
@@ -115,6 +144,7 @@ export default function AnalyticsScreen() {
             {/* <Text style={styles.filterLabel}>Time Range</Text> */}
             <RNPicker
               items={[
+                { value: "all", label: "All Time" },
                 { value: "today", label: "Today" },
                 { value: "this_week", label: "This Week" },
                 { value: "this_month", label: "This Month" },
@@ -165,59 +195,67 @@ export default function AnalyticsScreen() {
             />
           </View>
         </View>
-
-        {/* <Button onPress={handleFilter}>Aplly Filters</Button> */}
       </View>
 
       {/* stat */}
-      <View style={{ marginBottom: 6 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 6,
-          }}
-        >
-          <View style={styles.metricCard}>
-            <View>
-              <MessageCircle color={colors.dark.primary} size={24} />
-            </View>
-            <Text style={styles.metricValue}>{data?.message_count}</Text>
-            <Text style={styles.metricLabel}>Messages Received</Text>
-          </View>
-
-          <View style={styles.metricCard}>
-            <View>
-              <Calendar color={colors.dark.success} size={24} />
-            </View>
-            <Text style={styles.metricValue}>{data?.booking_count}</Text>
-            <Text style={styles.metricLabel}>Appointments Booked</Text>
-          </View>
-
-          <View style={styles.metricCard}>
-            <View>
-              <DollarSign color={colors.dark.primaryLight} size={24} />
-            </View>
-            <Text style={styles.metricValue}>{data?.total_revenue}</Text>
-            <Text style={styles.metricLabel}>Total Revenue</Text>
-          </View>
-
-          <View style={styles.metricCard}>
-            <View>
-              <User2 color={colors.dark.warning} size={24} />
-            </View>
-            <Text style={styles.metricValue}>{data?.new_customers}</Text>
-            <Text style={styles.metricLabel}>New Customers</Text>
-          </View>
-          <View style={styles.metricCard}>
-            <View>
-              <MessageCircle color={colors.dark.danger} size={24} />
-            </View>
-            <Text style={styles.metricValue}>{data?.unanswered_messages}</Text>
-            <Text style={styles.metricLabel}>Unanswered Message</Text>
-          </View>
-        </View>
+<View className="mb-6">
+  <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+    {/* Messages Received */}
+    <View style={{ width: 240, paddingHorizontal: 8, marginBottom: 16 }}>
+      <View style={styles.metricCard}>
+        <MessageCircle color={colors.dark.primary} size={24} />
+        <Text style={styles.metricValue}>
+          {data?.message_count?.total || 0}
+        </Text>
+        <Text style={styles.metricLabel}>Messages Received</Text>
       </View>
+    </View>
+
+    {/* Appointments Booked */}
+    <View style={{ width: 240, paddingHorizontal: 8, marginBottom: 16 }}>
+      <View style={styles.metricCard}>
+        <Calendar color={colors.dark.success} size={24} />
+        <Text style={styles.metricValue}>
+          {data?.booking_count || 0}
+        </Text>
+        <Text style={styles.metricLabel}>Appointments Booked</Text>
+      </View>
+    </View>
+
+    {/* Total Revenue */}
+    <View style={{ width: 240, paddingHorizontal: 8, marginBottom: 16 }}>
+      <View style={styles.metricCard}>
+        <DollarSign color={colors.dark.primaryLight} size={24} />
+        <Text style={styles.metricValue}>
+          ${data?.total_revenue?.total?.toLocaleString() || 0}
+        </Text>
+        <Text style={styles.metricLabel}>Total Revenue</Text>
+      </View>
+    </View>
+
+    {/* New Customers */}
+    <View style={{ width: 240, paddingHorizontal: 8, marginBottom: 16 }}>
+      <View style={styles.metricCard}>
+        <User2 color={colors.dark.warning} size={24} />
+        <Text style={styles.metricValue}>
+          {data?.new_customers || 0}
+        </Text>
+        <Text style={styles.metricLabel}>New Customers</Text>
+      </View>
+    </View>
+
+    {/* Unanswered Messages */}
+    <View style={{ width: 240, paddingHorizontal: 8, marginBottom: 16 }}>
+      <View style={styles.metricCard}>
+        <MessageCircle color={colors.dark.danger} size={24} />
+        <Text style={styles.metricValue}>
+          {data?.unanswered_messages || 0}
+        </Text>
+        <Text style={styles.metricLabel}>Unanswered Messages</Text>
+      </View>
+    </View>
+  </View>
+</View>
 
       {/* Channel Distribution */}
       <View style={styles.section}>
@@ -230,7 +268,6 @@ export default function AnalyticsScreen() {
 
         <View style={styles.chartContainer}>
           <View style={styles.chartWrapper}>
-            {/* <PieCharts data={pieData} size={200} /> */}
             <PieChart widthAndHeight={widthAndHeight} series={series} />
           </View>
 
@@ -243,70 +280,85 @@ export default function AnalyticsScreen() {
                   {item.icon}
                 </View>
                 <Text style={styles.legendLabel}>{item.label}</Text>
+                <Text style={{ color: "#FFFFFF" }}>{item.value}</Text>
               </View>
             ))}
           </View>
         </View>
       </View>
 
-      {/* Financial Insights */}
-      <View style={styles.financialRow}>
-        <View style={[styles.financialCard, { flex: 1 }]}>
-          <View style={styles.financialHeader}>
-            <View
-              style={[
-                styles.financialIconContainer,
-                {
-                  backgroundColor: colors.dark.primary + "20",
-                },
-              ]}
-            >
-              <Camera color={colors.dark.primary} size={20} />
-            </View>
-            <Text style={styles.financialLabel}>Total Payments</Text>
-          </View>
-          <Text style={styles.financialValue}>$24,580</Text>
-          <View style={styles.financialChange}>
-            <TrendingUp color={colors.dark.success} size={14} />
-            <Text
-              style={[
-                styles.financialChangeText,
-                { color: colors.dark.success },
-              ]}
-            >
-              +15% from last month
-            </Text>
-          </View>
+{/* Financial Insights - 2 Columns */}
+<View className="flex-row flex-wrap -mx-2 mb-6">
+  <View className="w-1/2 px-2 mb-4">
+    <View style={styles.financialCard}>
+      <View style={styles.financialHeader}>
+        <View style={[styles.financialIconContainer, { backgroundColor: colors.dark.primary + "20" }]}>
+          <Camera color={colors.dark.primary} size={20} />
         </View>
-
-        <View style={[styles.financialCard, { flex: 1 }]}>
-          <View style={styles.financialHeader}>
-            <View
-              style={[
-                styles.financialIconContainer,
-                {
-                  backgroundColor: colors.dark.warning + "20",
-                },
-              ]}
-            >
-              <FileText color={colors.dark.warning} size={20} />
-            </View>
-            <Text style={styles.financialLabel}>Average Order Value</Text>
-          </View>
-          <Text style={styles.financialValue}>$142</Text>
-          <View style={styles.financialChange}>
-            <TrendingUp color={colors.dark.success} size={14} />
-            <Text
-              style={[
-                styles.financialChangeText,
-                { color: colors.dark.success },
-              ]}
-            >
-              +8.2% from last month
-            </Text>
-          </View>
-        </View>
+        <Text style={styles.financialLabel}>Total Payments</Text>
       </View>
+      <Text style={styles.financialValue}>$24,580</Text>
+      <View style={styles.financialChange}>
+        <TrendingUp color={colors.dark.success} size={14} />
+        <Text style={[styles.financialChangeText, { color: colors.dark.success }]}>
+          +15% from last month
+        </Text>
+      </View>
+    </View>
+  </View>
+
+  <View className="w-1/2 px-2 mb-4">
+    <View style={styles.financialCard}>
+      <View style={styles.financialHeader}>
+        <View style={[styles.financialIconContainer, { backgroundColor: colors.dark.warning + "20" }]}>
+          <FileText color={colors.dark.warning} size={20} />
+        </View>
+        <Text style={styles.financialLabel}>Average Order Value</Text>
+      </View>
+      <Text style={styles.financialValue}>$142</Text>
+      <View style={styles.financialChange}>
+        <TrendingUp color={colors.dark.success} size={14} />
+        <Text style={[styles.financialChangeText, { color: colors.dark.success }]}>
+          +8.2% from last month
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View className="w-1/2 px-2 mb-4">
+    <View style={styles.financialCard}>
+      <View style={styles.financialHeader}>
+        <View style={[styles.financialIconContainer, { backgroundColor: colors.dark.warning + "20" }]}>
+          <FileText color={colors.dark.warning} size={20} />
+        </View>
+        <Text style={styles.financialLabel}>Average Order Value</Text>
+      </View>
+      <Text style={styles.financialValue}>$142</Text>
+      <View style={styles.financialChange}>
+        <TrendingUp color={colors.dark.success} size={14} />
+        <Text style={[styles.financialChangeText, { color: colors.dark.success }]}>
+          +8.2% from last month
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View className="w-1/2 px-2 mb-4">
+    <View style={styles.financialCard}>
+      <View style={styles.financialHeader}>
+        <View style={[styles.financialIconContainer, { backgroundColor: colors.dark.warning + "20" }]}>
+          <FileText color={colors.dark.warning} size={20} />
+        </View>
+        <Text style={styles.financialLabel}>Average Order Value</Text>
+      </View>
+      <Text style={styles.financialValue}>$142</Text>
+      <View style={styles.financialChange}>
+        <TrendingUp color={colors.dark.success} size={14} />
+        <Text style={[styles.financialChangeText, { color: colors.dark.success }]}>
+          +8.2% from last month
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
 
       {/* Top AI Questions */}
       <View style={styles.section}>
@@ -424,9 +476,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   legendColor: {
-    width: 20,
-    height: 20,
-    padding: 2,
+    width: 18,
+    height: 18,
     borderRadius: 4,
     alignItems: "center",
     justifyContent: "center",
@@ -437,7 +488,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   financialRow: {
-    flexDirection: "row",
+    flexWrap: "wrap",
+    width: "48%",
     gap: 12,
     marginBottom: 24,
   },
