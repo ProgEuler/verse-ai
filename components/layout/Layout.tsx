@@ -2,17 +2,18 @@ import colors from "@/constants/colors";
 import { ReactNode } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import {
-  SafeAreaView,
-  SafeAreaViewProps,
-  useSafeAreaInsets,
+   SafeAreaView,
+   SafeAreaViewProps,
+   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
 type Props = {
   children?: ReactNode;
   stickyHeaderIndices?: number[];
+  refreshControl?: React.ReactElement<any>;
 } & SafeAreaViewProps;
 
-export function Layout({ children, style, ...props }: Props) {
+export function Layout({ children, style, refreshControl, ...props }: Props) {
   const padding = 12;
   const { bottom } = useSafeAreaInsets()
   return (
@@ -31,6 +32,7 @@ export function Layout({ children, style, ...props }: Props) {
         showsHorizontalScrollIndicator={false}
         keyboardDismissMode="interactive"
         bottomOffset={20}
+        refreshControl={refreshControl}
         contentContainerStyle={[
           {
             flexGrow: 1,

@@ -2,31 +2,26 @@ import { useGetDashboardDataQuery } from "@/api/user-api/dashboard.api";
 import Facebook from "@/assets/svgs/facebook.svg";
 import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import { Layout } from "@/components/layout/Layout";
-import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
 import {
-    Calendar,
-    CheckCircle,
-    CreditCard,
-    DollarSign,
-    Instagram,
-    MessageCircle,
+   Calendar,
+   CheckCircle,
+   CreditCard,
+   DollarSign,
+   Instagram,
+   MessageCircle,
 } from "lucide-react-native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { RefreshControl, StyleSheet, Text, View } from "react-native";
 import { AppointmentsList } from "./appointments-list";
 
 export default function DashboardScreen() {
   //   const user = useSelector(selectCurrentUser);
   //   const token = useSelector(selectCurrentToken);
-  const { data, isLoading, refetch } = useGetDashboardDataQuery(undefined);
+  const { data, isLoading, refetch, isFetching } = useGetDashboardDataQuery(undefined);
   if (isLoading) return <LoadingSpinner />;
   console.log("data ->", data);
-
-  function refetchData() {
-    refetch();
-  }
 
   function formatTime(dateString: string) {
     const date = new Date(dateString.replace(" ", "T")); // Fix for iOS
@@ -38,10 +33,11 @@ export default function DashboardScreen() {
   }
 
   return (
-    <Layout>
-      <View>
-         <Button onPress={refetchData}>Refresh</Button>
-      </View>
+    <Layout
+      refreshControl={
+        <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+      }
+    >
       {/* stat */}
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
