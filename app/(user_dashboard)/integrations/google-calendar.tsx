@@ -10,10 +10,9 @@ export default function GoogleCalendar() {
   const [getUrl, { isLoading }] = useGetCalendarUrlMutation({});
 
   const handleConnect = async () => {
-    console.log("Connecting to: Google Calendar");
     try {
       const res = await getUrl("");
-      console.log("Integration response:", res);
+      // console.log("Integration response:", res);
       await Linking.openURL(res.data.auth_url);
       Toast.success("Google Calendar connected successfully!");
     } catch (error) {

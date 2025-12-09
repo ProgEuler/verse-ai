@@ -1,109 +1,128 @@
-import { useGetFbUrlQuery } from "@/api/user-api/integrations.api";
+import {
+  useGetFbUrlQuery,
+  useGetIgUrlQuery,
+} from "@/api/user-api/integrations.api";
+import Fb from "@/assets/svgs/facebook.svg";
+import Ig from "@/assets/svgs/instagram.svg";
+import Wp from "@/assets/svgs/whatsapp.svg";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
-import {
-  Calendar,
-  Instagram,
-  MessageCircle,
-  MessageSquare,
-  Zap,
-} from "lucide-react-native";
-import React from "react";
-import {
-   Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Linking, StyleSheet, Text, View } from "react-native";
+import { Toast } from "toastify-react-native";
 interface Integration {
   id: string;
   name: string;
   description: string;
   icon: React.ReactNode;
   connected: boolean;
+  url: string;
 }
 
 export default function IntegrationsScreen() {
+  const {
+    data: fbUrl,
+    isLoading: fbUrlLoading,
+    error,
+  } = useGetFbUrlQuery(undefined);
+  const { data: igUrl, isLoading: igUrlLoading } = useGetIgUrlQuery(undefined);
+
+  if (fbUrlLoading || igUrlLoading) return <LoadingSpinner />;
+  console.log(error);
+
   const integrations: Integration[] = [
     {
       id: "facebook",
       name: "Facebook Messenger",
       description: "Connect to collaborate easily",
-      icon: <MessageCircle color={colors.dark.primary} size={28} />,
+      icon: <Fb color={colors.dark.primary} />,
       connected: false,
+      url: fbUrl.redirect_url,
     },
     {
       id: "whatsapp",
       name: "WhatsApp Business",
       description: "Connect for ultimate reach",
-      icon: <MessageSquare color={colors.dark.primary} size={28} />,
+      icon: <Wp color={colors.dark.primary} />,
       connected: false,
+      url: fbUrl.redirect_url,
     },
     {
       id: "instagram",
       name: "Instagram DM",
       description: "Connect to transform replies",
-      icon: <Instagram color={colors.dark.primary} size={28} />,
+      icon: <Ig color={colors.dark.primary} />,
       connected: false,
+      url: igUrl.redirect_url,
     },
-    {
-      id: "calendar",
-      name: "Calendar",
-      description: "Connect to automate Booking",
-      icon: <Calendar color={colors.dark.primary} size={28} />,
-      connected: false,
-    },
-    {
-      id: "crm",
-      name: "CRM (Zapier)",
-      description: "Connect to automate clerics",
-      icon: <Zap color={colors.dark.primary} size={28} />,
-      connected: false,
-    },
+    //  {
+    //    id: "calendar",
+    //    name: "Calendar",
+    //    description: "Connect to automate Booking",
+    //    icon: <Calendar color={colors.dark.primary} size={28} />,
+    //    connected: false,
+    //    url: fbUrl.redirect_url,
+    //  },
+    //  {
+    //    id: "crm",
+    //    name: "CRM (Zapier)",
+    //    description: "Connect to automate clerics",
+    //    icon: <Zap color={colors.dark.primary} size={28} />,
+    //    connected: false,
+    //    url: fbUrl
+    //  },
   ];
 
-  const handleConnect = async (integrationId: string) => {
+  const handleConnect = async (
+    integrationId: string,
+    integrationUrl: string
+  ) => {
     console.log("Connecting to:", integrationId);
-    
+
+    try {
+      await Linking.openURL(integrationUrl);
+      Toast.success(`${integrationId} connected successfully!`);
+    } catch (error) {
+      Toast.error(`Failed to connect ${integrationId}.`);
+      console.log("Error connecting to Google Calendar:", error);
+      return;
+    }
   };
 
   return (
-   <Layout edges={["bottom"]}>
-        <View style={styles.grid}>
-          {integrations.map((integration) => (
-            <View key={integration.id} style={styles.card}>
-              <View style={styles.cardHeader}>
-                <View style={styles.iconWrapper}>{integration.icon}</View>
-                <Text style={styles.cardTitle}>{integration.name}</Text>
-              </View>
+    <Layout edges={["bottom"]}>
+      <Text style={{ color: colors.dark.textSecondary, padding: 8 }}>
+         Link your business accounts to manage messages and posts from on ecentralized hub.
+      </Text>
+      <View style={styles.grid}>
+        {integrations.map((integration) => (
+          <View key={integration.id} style={styles.card}>
+            <View style={styles.cardHeader}>
+              <View>{integration.icon}</View>
+            </View>
+            <View>
+              <Text style={styles.cardTitle}>{integration.name}</Text>
               <Text style={styles.cardDescription}>
                 {integration.description}
               </Text>
-
-              <Button
-                size="sm"
-                onPress={() => handleConnect(integration.id)}
-                testID={`connect-${integration.id}`}
-              >
-                Connect
-              </Button>
             </View>
-          ))}
-        </View>
-   </Layout>
+            <Button
+              size="sm"
+              style={{ height: 36 }}
+              onPress={() => handleConnect(integration.id, integration.url)}
+              testID={`connect-${integration.id}`}
+            >
+              Connect
+            </Button>
+          </View>
+        ))}
+      </View>
+    </Layout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
   grid: {
     display: "flex",
     flexDirection: "row" as const,
@@ -112,34 +131,28 @@ const styles = StyleSheet.create({
     justifyContent: "space-between" as const,
   },
   card: {
-    width: "48%",
+    width: "100%",
     display: "flex",
-    flexDirection: "column" as const,
+    flexDirection: "row" as const,
     justifyContent: "space-between" as const,
     backgroundColor: colors.dark.cardBackground,
     borderRadius: 12,
-    padding: 16,
+    padding: 18,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.05)",
   },
   cardHeader: {
-    flexDirection: "column" as const,
-    alignItems: "flex-start" as const,
-    marginBottom: 8,
-  },
-  iconWrapper: {
-    marginBottom: 12,
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
   },
   cardTitle: {
-    fontSize: 16,
-    fontWeight: "600" as const,
+    fontSize: 14,
+    fontWeight: "400" as const,
     color: colors.dark.text,
-    marginBottom: 4,
   },
   cardDescription: {
     fontSize: 13,
     color: colors.dark.textSecondary,
-    marginBottom: 16,
     lineHeight: 18,
   },
   connectButton: {

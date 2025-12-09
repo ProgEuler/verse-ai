@@ -12,10 +12,13 @@ export const integrationsApi = baseApi.injectEndpoints({
     getFbUrl: builder.query({
       query: () => ({
          url: "/connect/fb/",
-         method: "GET",
+         method: "Get",
       }),
+    }),
+    getIgUrl: builder.query({
+      query: () => "/connect/ig/"
     }),
   }),
 });
 
-export const { useGetCalendarUrlMutation, useGetFbUrlQuery } = integrationsApi;
+export const { useGetCalendarUrlMutation, useGetFbUrlQuery, useGetIgUrlQuery } = integrationsApi;
