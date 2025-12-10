@@ -8,7 +8,7 @@ import { StatusBar, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Provider } from "react-redux";
-import ToastManager from 'toastify-react-native'
+import ToastManager from 'toastify-react-native';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -34,6 +34,7 @@ function RootLayoutNav() {
       {/* <Stack.Screen name="(dashboard)" /> */}
       <Stack.Screen name="(admin_dashboard)" />
       <Stack.Screen name="(user_dashboard)" />
+      <Stack.Screen name="add-appointment" options={{ presentation: 'card', headerShown: true, title: 'Add Appointment' }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

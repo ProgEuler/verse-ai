@@ -130,13 +130,7 @@ export default function DashboardLayout() {
                 }}
             />
 
-            <Drawer.Screen
-                name="add-appointment"
-                options={{
-                    drawerItemStyle: { display: "none" },
-                    title: "Add Appointment",
-                }}
-            />
+
             <Drawer.Screen
                 name="chat-detail"
                 options={{

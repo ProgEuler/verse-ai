@@ -1,5 +1,7 @@
 import { useGetDaysDataQuery } from "@/api/user-api/calendar.api";
+import AppointmentsByDay from "@/components/appointments-by-day";
 import { Layout } from "@/components/layout/Layout";
+import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
@@ -7,8 +9,6 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import GoogleCalendar from "./integrations/google-calendar";
-import AppointmentsByDay from "@/components/appointments-by-day";
-import { Button } from "@/components/ui/Button";
 
 export default function AppointmentsScreen() {
   const router = useRouter();
@@ -108,7 +108,7 @@ export default function AppointmentsScreen() {
         </Button>
 
         <Button
-          onPress={() => router.push("/(user_dashboard)/add-appointment")}
+          onPress={() => router.push("/add-appointment")}
           variant="small"
           size="sm"
           style={{ marginLeft: 0 }}

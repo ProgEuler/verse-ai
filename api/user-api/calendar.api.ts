@@ -14,7 +14,7 @@ export const calendarApi = baseApi.injectEndpoints({
     }),
     addBooking: builder.mutation({
       query: (body) => ({
-        url: "/bookings/create/",
+        url: "/booking/",
         method: "POST",
         body,
       }),

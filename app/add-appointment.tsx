@@ -3,29 +3,41 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
 import { RNDatePicker } from "@/components/ui/date-picker";
 import colors from "@/constants/colors";
-import { useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+   StatusBar,
+   StyleSheet,
+   Text,
+   TextInput,
+   View
 } from "react-native";
 import { Toast } from "toastify-react-native";
 
 type FormData = {
   title: string;
-  start_date: string;
-  start_time: string;
-  end_date: string;
-  end_time: string;
+  start_date: Date;
+  start_time: Date;
+  end_date: Date;
+  end_time: Date;
   client_email: string;
   client_number: string;
   location: string;
   description: string;
+};
+
+const formatDate = (date: Date, time: Date): string => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const seconds = time.getSeconds();
+
+    if (isNaN(year)) return "";
+
+    return `${year}-${month}-${day} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
 export default function AddAppointmentScreen() {
@@ -34,22 +46,28 @@ export default function AddAppointmentScreen() {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<FormData>();
 
+  const combineDateTime = (date: Date, time: Date) => {
+      const d = new Date(date);
+      const t = new Date(time);
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate(), t.getHours(), t.getMinutes(), t.getSeconds());
+  };
+
   const handleSendWhatsApp = async (data: FormData) => {
     try {
-        // Construct payload - combining date and time might be needed depending on backend,
-        // but sending as is for now based on form structure.
-        // Assuming backend expects "date" and "time" fields or ISO strings.
-        // For now, mapping form names to probable backend names.
+        const startTimeStr = formatDate(data.start_date, data.start_time);
+        const endTimeStr = formatDate(data.end_date, data.end_time);
 
         const payload = {
             title: data.title,
-            start_time: `${data.start_date}T${data.start_time}`, // Naive combination, adjust as needed
-            end_time: `${data.end_date}T${data.end_time}`,
-            client_email: data.client_email,
-            client_phone: data.client_number,
+            start_time: startTimeStr,
+            end_time: endTimeStr,
+            client: data.client_email,
+            notes: data.description,
+            number: data.client_number,
             location: data.location,
             description: data.description,
         };
@@ -58,7 +76,7 @@ export default function AddAppointmentScreen() {
         await addBooking(payload).unwrap();
 
         Toast.success("Appointment added successfully");
-        router.replace("/(user_dashboard)/appointments");
+      //   router.replace("/(user_dashboard)/appointments");
     } catch (error: any) {
         console.error("Failed to add appointment:", error);
         Toast.error(error?.data?.message || "Failed to add appointment");
@@ -71,26 +89,22 @@ export default function AddAppointmentScreen() {
 
   return (
     <Layout>
-      {/* back */}
-      <TouchableOpacity
-        onPress={() => router.replace("/(user_dashboard)/appointments")}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            gap: 6,
-            position: "fixed",
-            marginRight: 16,
-          }}
-        >
-          <ChevronLeft color={colors.dark.textSecondary} size={20} />
-          <Text style={styles.colorText}>
-            {"Back"}
-          </Text>
-        </View>
-      </TouchableOpacity>
-
+      <Stack.Screen
+        options={{
+            title: 'Add Appointment',
+            headerShown: true,
+            headerStyle: {
+                backgroundColor: colors.dark.cardBackground,
+            },
+            headerTintColor: colors.dark.text,
+            headerShadowVisible: false,
+        }}
+      />
+      <StatusBar
+        animated
+        backgroundColor={colors.dark.background}
+        barStyle="light-content"
+      />
       {/* Title */}
       <View style={styles.fieldContainer}>
         <Text style={styles.label}>Title</Text>
@@ -126,7 +140,15 @@ export default function AddAppointmentScreen() {
             <Controller
               control={control}
               name="start_date"
-              rules={{ required: "Date is required" }}
+              rules={{
+                  required: "Date is required",
+                  validate: (value) => {
+                      const date = new Date(value);
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return date >= today || "Date cannot be in the past";
+                  }
+              }}
               render={({ field: { onChange, value } }) => (
                 <RNDatePicker
                   onChangeDate={onChange}
@@ -142,7 +164,16 @@ export default function AddAppointmentScreen() {
             <Controller
               control={control}
               name="start_time"
-              rules={{ required: "Time is required" }}
+              rules={{
+                  required: "Time is required",
+                  validate: (value) => {
+                      const startDate = getValues('start_date');
+                      if (!startDate) return true;
+
+                      const combined = combineDateTime(startDate, value);
+                      return combined > new Date() || "Start time must be in the future";
+                  }
+              }}
               render={({ field: { onChange, value } }) => (
                 <RNDatePicker
                   onChangeDate={onChange}
@@ -170,7 +201,15 @@ export default function AddAppointmentScreen() {
             <Controller
               control={control}
               name="end_date"
-              rules={{ required: "Date is required" }}
+              rules={{
+                  required: "Date is required",
+                  validate: (value) => {
+                      const startDate = getValues('start_date');
+                      if (!startDate) return true;
+
+                      return new Date(value) >= new Date(startDate) || "End date cannot be before start date";
+                  }
+              }}
               render={({ field: { onChange, value } }) => (
                 <RNDatePicker
                   onChangeDate={onChange}
@@ -186,7 +225,21 @@ export default function AddAppointmentScreen() {
             <Controller
               control={control}
               name="end_time"
-              rules={{ required: "Time is required" }}
+              rules={{
+                  required: "Time is required",
+                  validate: (value) => {
+                      const startDate = getValues('start_date');
+                      const startTime = getValues('start_time');
+                      const endDate = getValues('end_date');
+
+                      if (!startDate || !startTime || !endDate) return true;
+
+                      const start = combineDateTime(startDate, startTime);
+                      const end = combineDateTime(endDate, value);
+
+                      return end > start || "End time must be after start time";
+                  }
+              }}
               render={({ field: { onChange, value } }) => (
                 <RNDatePicker
                   onChangeDate={onChange}
