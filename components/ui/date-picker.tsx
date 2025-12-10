@@ -39,9 +39,17 @@ export function RNDatePicker({ label, onChangeDate, value, mode, error }: Props)
             >
                 <RNInput
                     label={label}
-                    value={value ? value.toDateString() : ""}
+                    value={
+                        value
+                        ? mode === 'time'
+                            ? value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : mode === 'datetime'
+                                ? value.toLocaleString()
+                                : value.toDateString()
+                        : ""
+                    }
                     editable={false}
-                    key={value?.toDateString()}
+                    key={value?.toString()}
                     pointerEvents="none"
                     error={error}
                 />
