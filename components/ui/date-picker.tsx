@@ -1,6 +1,6 @@
 import { RNInput } from "@/components/ui/input";
 import colors, { COLORS } from "@/constants/colors";
-import { Calendar } from "lucide-react-native";
+import { Calendar, Clock } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, TouchableOpacity } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -53,14 +53,26 @@ export function RNDatePicker({ label, onChangeDate, value, mode, error }: Props)
                     pointerEvents="none"
                     error={error}
                 />
-                <Calendar
-                  color={colors.dark.textSecondary}
-                  style={{
-                        position: "absolute",
-                        right: 8,
-                        top: 14,
-                        padding: 4,
-                    }} />
+                {
+                  mode === "date"
+                  ? <Calendar
+                    color={colors.dark.textSecondary}
+                    style={{
+                          position: "absolute",
+                          right: 8,
+                          top: 14,
+                          padding: 4,
+                      }} />
+                  : <Clock
+                      color={colors.dark.textSecondary}
+                        style={{
+                              position: "absolute",
+                              right: 8,
+                              top: 14,
+                              padding: 4,
+                           }}
+                     />
+                }
             </Pressable>
 
             <DateTimePicker

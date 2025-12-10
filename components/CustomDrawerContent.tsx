@@ -161,27 +161,6 @@ const adminMenuItems: MenuItem[] = [
   },
 ];
 
-const quickActions: MenuItem[] = [
-  //  {
-  //      id: "connect-channel",
-  //      label: "Connect Channel",
-  //      icon: Link2,
-  //      route: "/(dashboard)/integrations",
-  //  },
-//   {
-//     id: "train-ai",
-//     label: "Train AI",
-//     icon: Sparkles,
-//     route: "/(dashboard)/knowledge-base",
-//   },
-  {
-    id: "test-chat",
-    label: "Test Chat",
-    icon: MessageCircle,
-    route: "/(dashboard)/chat-history",
-  },
-];
-
 export default function CustomDrawerContent(props: any) {
   const router = useRouter();
   const { signIn, name } = useSignIn();
@@ -219,8 +198,6 @@ export default function CustomDrawerContent(props: any) {
       <View style={styles.header}>
         <View style={styles.logoContainer}>
           <View style={styles.logoCircle}>
-            {/* <Bot color={colors.dark.primary} size={24} /> */}
-            {/* <Image source={logo} resizeMode='contain' style={{ width: 96, height: 96 }} /> */}
             <Logo width={32} height={32} />
           </View>
           <Text style={styles.logoText}>Verse AI</Text>
@@ -257,29 +234,6 @@ export default function CustomDrawerContent(props: any) {
             );
           })}
         </View>
-
-        <View style={styles.divider} />
-
-        {/* quick actions */}
-        {user?.role !== "admin" && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Quick Actions</Text>
-            {quickActions.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <TouchableOpacity
-                  key={item.id}
-                  style={styles.menuItem}
-                  onPress={() => handleNavigation(item.route)}
-                >
-                  <Icon color={colors.dark.textSecondary} size={20} />
-                  <Text style={styles.menuText}>{item.label}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        )}
       </ScrollView>
 
       <View style={styles.footer}>

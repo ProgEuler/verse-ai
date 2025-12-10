@@ -90,11 +90,6 @@ export default function AddAppointmentScreen() {
     router.back();
   };
 
-  /*
-     Removed early return: if (isLoading) return <LoadingSpinner />;
-     to support overlay spinner
-  */
-
   return (
     <View style={{ flex: 1 }}>
       <Layout>

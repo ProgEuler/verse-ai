@@ -4,27 +4,34 @@ import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import { Layout } from "@/components/layout/Layout";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
+import { selectCurrentUser } from "@/store/authSlice";
 import {
-   Calendar,
-   CheckCircle,
-   CreditCard,
-   DollarSign,
-   Instagram,
-   MessageCircle,
+  Calendar,
+  CheckCircle,
+  CreditCard,
+  DollarSign,
+  Instagram,
+  MessageCircle,
 } from "lucide-react-native";
 import React from "react";
 import { RefreshControl, StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 import { AppointmentsList } from "./appointments-list";
 
+import { Button } from "@/components/ui/Button";
+import { scheduleNotificationHandler } from "@/utils/get-local-notification";
+
 export default function DashboardScreen() {
-  //   const user = useSelector(selectCurrentUser);
-  //   const token = useSelector(selectCurrentToken);
-  const { data, isLoading, refetch, isFetching } = useGetDashboardDataQuery(undefined);
+  const user = useSelector(selectCurrentUser);
+  console.log(user);
+
+  const { data, isLoading, refetch, isFetching } =
+    useGetDashboardDataQuery(undefined);
   if (isLoading) return <LoadingSpinner />;
   console.log("data ->", data);
 
   function formatTime(dateString: string) {
-    const date = new Date(dateString.replace(" ", "T")); // Fix for iOS
+    const date = new Date(dateString.replace(" ", "T"));
     return date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit",
@@ -38,6 +45,9 @@ export default function DashboardScreen() {
         <RefreshControl refreshing={isFetching} onRefresh={refetch} />
       }
     >
+      <Button onPress={scheduleNotificationHandler}>
+        Get local Notification
+      </Button>
       {/* stat */}
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
@@ -76,7 +86,9 @@ export default function DashboardScreen() {
           >
             <DollarSign color="#10B981" size={24} />
           </View>
-          <Text style={styles.statValue}>{data.today_payments.list.length}</Text>
+          <Text style={styles.statValue}>
+            {data.today_payments.list.length}
+          </Text>
           <Text style={styles.statLabel}>Payments Today</Text>
         </View>
       </View>
@@ -90,7 +102,7 @@ export default function DashboardScreen() {
           </Text>
         </View>
         <View style={styles.appointmentsList}>
-            <AppointmentsList appointments={data.today_meetings.list} />
+          <AppointmentsList appointments={data.today_meetings.list} />
         </View>
       </View>
 
@@ -134,7 +146,7 @@ export default function DashboardScreen() {
               </View>
             ))
           ) : (
-           <View style={styles.emptyAppointments}>
+            <View style={styles.emptyAppointments}>
               <CreditCard
                 color={colors.dark.textSecondary}
                 size={48}
@@ -234,16 +246,6 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-  },
   statsRow: {
     flexDirection: "row",
     flexWrap: "wrap",
