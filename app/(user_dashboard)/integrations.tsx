@@ -9,7 +9,10 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
+import { selectChannelStatus } from "@/store/channelSlice";
+import { Calendar } from "lucide-react-native";
 import { Linking, StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 import { Toast } from "toastify-react-native";
 interface Integration {
   id: string;
@@ -21,15 +24,14 @@ interface Integration {
 }
 
 export default function IntegrationsScreen() {
+  const channel = useSelector(selectChannelStatus);
   const {
     data: fbUrl,
     isLoading: fbUrlLoading,
-    error,
   } = useGetFbUrlQuery(undefined);
   const { data: igUrl, isLoading: igUrlLoading } = useGetIgUrlQuery(undefined);
 
   if (fbUrlLoading || igUrlLoading) return <LoadingSpinner />;
-  console.log(error);
 
   const integrations: Integration[] = [
     {
@@ -37,7 +39,7 @@ export default function IntegrationsScreen() {
       name: "Facebook Messenger",
       description: "Connect to collaborate easily",
       icon: <Fb color={colors.dark.primary} />,
-      connected: false,
+      connected: channel.facebook,
       url: fbUrl.redirect_url,
     },
     {
@@ -45,7 +47,7 @@ export default function IntegrationsScreen() {
       name: "WhatsApp Business",
       description: "Connect for ultimate reach",
       icon: <Wp color={colors.dark.primary} />,
-      connected: false,
+      connected: channel.whatsapp,
       url: fbUrl.redirect_url,
     },
     {
@@ -53,25 +55,17 @@ export default function IntegrationsScreen() {
       name: "Instagram DM",
       description: "Connect to transform replies",
       icon: <Ig color={colors.dark.primary} />,
-      connected: false,
+      connected: channel.instagram,
       url: igUrl.redirect_url,
     },
-    //  {
-    //    id: "calendar",
-    //    name: "Calendar",
-    //    description: "Connect to automate Booking",
-    //    icon: <Calendar color={colors.dark.primary} size={28} />,
-    //    connected: false,
-    //    url: fbUrl.redirect_url,
-    //  },
-    //  {
-    //    id: "crm",
-    //    name: "CRM (Zapier)",
-    //    description: "Connect to automate clerics",
-    //    icon: <Zap color={colors.dark.primary} size={28} />,
-    //    connected: false,
-    //    url: fbUrl
-    //  },
+    {
+      id: "calendar",
+      name: "Calendar",
+      description: "Connect to automate Booking",
+      icon: <Calendar color={colors.dark.primary} size={28} />,
+      connected: channel.calendar,
+      url: fbUrl.redirect_url,
+    },
   ];
 
   const handleConnect = async (
@@ -91,9 +85,10 @@ export default function IntegrationsScreen() {
   };
 
   return (
-    <Layout edges={["bottom"]}>
+    <Layout>
       <Text style={{ color: colors.dark.textSecondary, padding: 8 }}>
-         Link your business accounts to manage messages and posts from on ecentralized hub.
+        Link your business accounts to manage messages and posts from on
+        ecentralized hub.
       </Text>
       <View style={styles.grid}>
         {integrations.map((integration) => (
@@ -110,10 +105,12 @@ export default function IntegrationsScreen() {
             <Button
               size="sm"
               style={{ height: 36 }}
+              variant={integration.connected ? "destructive" : "primary"}
               onPress={() => handleConnect(integration.id, integration.url)}
               testID={`connect-${integration.id}`}
+              disabled={integration.connected}
             >
-              Connect
+              {integration.connected ? "connected" : "Connect"}
             </Button>
           </View>
         ))}

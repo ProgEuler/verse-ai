@@ -6,13 +6,15 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { RefreshControl, StyleSheet, Text, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import GoogleCalendar from "./integrations/google-calendar";
 
 export default function AppointmentsScreen() {
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState<number>((new Date()).getDate());
+  const [selectedDate, setSelectedDate] = useState<number>(
+    new Date().getDate()
+  );
   const [viewMode, setViewMode] = useState<"today" | "week" | "month">("month");
   const [month, setMonth] = useState<number>(12);
   const [year, setYear] = useState<number>(2025);
@@ -20,7 +22,7 @@ export default function AppointmentsScreen() {
   const {
     data: daysData,
     isLoading,
-    isError,
+    refetch,
   } = useGetDaysDataQuery({
     month: month,
     year: year,
@@ -56,7 +58,11 @@ export default function AppointmentsScreen() {
   });
 
   return (
-    <Layout>
+    <Layout
+      refreshControl={
+        <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+      }
+    >
       {/* View Mode Buttons */}
       <View style={styles.viewModeContainer}>
         <Button
@@ -161,15 +167,10 @@ export default function AppointmentsScreen() {
         />
       </View>
 
-
       <GoogleCalendar />
 
       {/* Today's Appointments Section */}
-      <AppointmentsByDay
-         day={selectedDate}
-         month={month}
-         year={year}
-      />
+      <AppointmentsByDay day={selectedDate} month={month} year={year} />
 
       {/* Sync Information Section */}
       <View style={styles.section}>

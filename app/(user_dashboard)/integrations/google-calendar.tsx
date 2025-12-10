@@ -2,16 +2,20 @@ import { useGetCalendarUrlMutation } from "@/api/user-api/integrations.api";
 import Google from "@/assets/svgs/Google_Calendar.svg";
 import { Button } from "@/components/ui/Button";
 import colors from "@/constants/colors";
+import { selectChannelStatus } from "@/store/channelSlice";
 import React from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 import { Toast } from "toastify-react-native";
 
 export default function GoogleCalendar() {
   const [getUrl, { isLoading }] = useGetCalendarUrlMutation({});
+  const channel = useSelector(selectChannelStatus);
+  //   console.log("channel status from google screen", channel)
 
   const handleConnect = async () => {
     try {
-      const res = await getUrl({ "from": "app" });
+      const res = await getUrl({ from: "app" });
       // console.log("Integration response:", res);
       await Linking.openURL(res.data.auth_url);
       Toast.success("Google Calendar connected successfully!");
@@ -44,17 +48,21 @@ export default function GoogleCalendar() {
         <View style={styles.integrationInfo}>
           <Text style={styles.integrationName}>Google Calendar</Text>
 
-        {
-         
-        }
-          <Button
-            size="sm"
-            onPress={handleConnect}
-            style={styles.connectButton}
-            isLoading={isLoading}
-          >
-            Connect
-          </Button>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Button
+              size="sm"
+              variant={channel.calendar ? "destructive" : "primary"}
+              onPress={handleConnect}
+              style={styles.connectButton}
+              isLoading={isLoading}
+              disabled={channel.calendar}
+            >
+              {channel.calendar ? "connected" : "Connect"}
+            </Button>
+            {/* <Button size="sm" style={styles.connectButton}>
+              Disconnected
+            </Button> */}
+          </View>
         </View>
       </View>
     </View>
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 6,
-    backgroundColor: colors.dark.primary,
+    //  backgroundColor: colors.dark.primary,
   },
   connectButtonText: {
     fontSize: 14,

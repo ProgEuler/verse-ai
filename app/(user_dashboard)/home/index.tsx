@@ -4,30 +4,30 @@ import WhatsApp from "@/assets/svgs/whatsapp.svg";
 import { Layout } from "@/components/layout/Layout";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
-import { selectCurrentUser } from "@/store/authSlice";
-import {
-  Calendar,
-  CheckCircle,
-  CreditCard,
-  DollarSign,
-  Instagram,
-  MessageCircle,
-} from "lucide-react-native";
-import React from "react";
-import { RefreshControl, StyleSheet, Text, View } from "react-native";
-import { useSelector } from "react-redux";
 import { AppointmentsList } from "./appointments-list";
-
 import { Button } from "@/components/ui/Button";
 import { scheduleNotificationHandler } from "@/utils/get-local-notification";
+import { StyleSheet, Text, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setChannelStatus } from "@/store/channelSlice";
+import { Calendar, CheckCircle, CreditCard, DollarSign, Instagram, MessageCircle } from "lucide-react-native";
+import { RefreshControl } from "react-native";
 
 export default function DashboardScreen() {
-  const user = useSelector(selectCurrentUser);
-
   const { data, isLoading, refetch, isFetching } =
     useGetDashboardDataQuery(undefined);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (data?.channel_status) {
+      dispatch(setChannelStatus(data.channel_status));
+    }
+  }, [data, dispatch]);
+
   if (isLoading) return <LoadingSpinner />;
-  console.log("data ->", data);
+//   console.log("data ->", data);
 
   function formatTime(dateString: string) {
     const date = new Date(dateString.replace(" ", "T"));
