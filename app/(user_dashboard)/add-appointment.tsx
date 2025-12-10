@@ -1,62 +1,68 @@
-import KeyboardAvoidingScrollView from "@/components/layout/KeyboardAvoidingScrollView";
+import { useAddBookingMutation } from "@/api/user-api/calendar.api";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/Button";
 import { RNDatePicker } from "@/components/ui/date-picker";
-import { RNInput } from "@/components/ui/input";
 import colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import React, { useState } from "react";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
+import { Toast } from "toastify-react-native";
 
 type FormData = {
-  title?: string;
-  date?: Date;
-  time?: string;
-  price?: string;
-  reminder?: string;
-  client?: string;
-  location?: string;
-  service?: string;
-  notes?: string;
+  title: string;
+  start_date: string;
+  start_time: string;
+  end_date: string;
+  end_time: string;
+  client_email: string;
+  client_number: string;
+  location: string;
+  description: string;
 };
 
 export default function AddAppointmentScreen() {
   const router = useRouter();
+  const [addBooking, { isLoading }] = useAddBookingMutation();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("12/10/2025");
-  //   const [time, setTime] = useState("12:25 AM");
-  const [price, setPrice] = useState("100.00");
-  const [reminder, setReminder] = useState("1 Hours Ago");
-  const [client, setClient] = useState("");
-  const [location, setLocation] = useState("");
-  const [service, setService] = useState("");
-  const [notes, setNotes] = useState("");
+  const handleSendWhatsApp = async (data: FormData) => {
+    try {
+        // Construct payload - combining date and time might be needed depending on backend,
+        // but sending as is for now based on form structure.
+        // Assuming backend expects "date" and "time" fields or ISO strings.
+        // For now, mapping form names to probable backend names.
 
-  const [formData, setFormData] = useState<FormData>({});
+        const payload = {
+            title: data.title,
+            start_time: `${data.start_date}T${data.start_time}`, // Naive combination, adjust as needed
+            end_time: `${data.end_date}T${data.end_time}`,
+            client_email: data.client_email,
+            client_phone: data.client_number,
+            location: data.location,
+            description: data.description,
+        };
 
-  const handleInputChange = (field: keyof FormData, value: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [field]: value,
-    }));
-  };
+        console.log("Submitting payload:", payload);
+        await addBooking(payload).unwrap();
 
-  const handleSendWhatsApp = () => {
-    console.log("Send WhatsApp");
-    // Handle WhatsApp send logic
-  };
-
-  const handleSave = () => {
-    console.log("Save appointment", formData);
-    router.back();
+        Toast.success("Appointment added successfully");
+        router.replace("/(user_dashboard)/appointments");
+    } catch (error: any) {
+        console.error("Failed to add appointment:", error);
+        Toast.error(error?.data?.message || "Failed to add appointment");
+    }
   };
 
   const handleCancel = () => {
@@ -65,11 +71,9 @@ export default function AddAppointmentScreen() {
 
   return (
     <Layout>
-      {/* <Text style={styles.title}>Add Appointments</Text> */}
-
       {/* back */}
       <TouchableOpacity
-        onPress={() => router.replace("/(dashboard)/appointments")}
+        onPress={() => router.replace("/(user_dashboard)/appointments")}
       >
         <View
           style={{
@@ -81,30 +85,36 @@ export default function AddAppointmentScreen() {
           }}
         >
           <ChevronLeft color={colors.dark.textSecondary} size={20} />
-          <Text style={{ color: colors.dark.text, fontSize: 16 }}>
+          <Text style={styles.colorText}>
             {"Back"}
           </Text>
         </View>
       </TouchableOpacity>
+
       {/* Title */}
       <View style={styles.fieldContainer}>
-        {/* <Text style={styles.label}>Title</Text>
+        <Text style={styles.label}>Title</Text>
         <View style={styles.inputWithIcon}>
-          <TextInput
-            style={styles.input}
-            placeholder="Appointments title here"
-            placeholderTextColor={colors.dark.textSecondary}
-            value={title}
-            onChangeText={setTitle}
+          <Controller
+            control={control}
+            name="title"
+            rules={{ required: "Title is required" }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Appointments title here"
+                placeholderTextColor={colors.dark.textSecondary}
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
           />
-        </View> */}
-        <RNInput
-          label="Title"
-          onChangeText={(t) => handleInputChange("title", t)}
-        />
+        </View>
+        {errors.title && <Text style={styles.errorText}>{errors.title.message}</Text>}
       </View>
 
-      {/* Date & Time */}
+      {/* Start Date & Time */}
+      <Text style={styles.label}>Starting Date & Time</Text>
       <View style={styles.row}>
         <View
           style={[
@@ -113,87 +123,184 @@ export default function AddAppointmentScreen() {
           ]}
         >
           <View style={{ width: "50%" }}>
-            <RNDatePicker
-              onChangeDate={(date) => handleInputChange("date", date)}
-              label="Date"
-              value={formData.date}
+            <Controller
+              control={control}
+              name="start_date"
+              rules={{ required: "Date is required" }}
+              render={({ field: { onChange, value } }) => (
+                <RNDatePicker
+                  onChangeDate={onChange}
+                  label="Date"
+                  value={value}
+                  mode="date"
+                />
+              )}
             />
+             {errors.start_date && <Text style={styles.errorText}>{errors.start_date.message}</Text>}
           </View>
           <View style={{ width: "50%" }}>
-            <RNDatePicker
-              onChangeDate={(time) => handleInputChange("time", time)}
-              label="Time"
-              value={formData.time}
+            <Controller
+              control={control}
+              name="start_time"
+              rules={{ required: "Time is required" }}
+              render={({ field: { onChange, value } }) => (
+                <RNDatePicker
+                  onChangeDate={onChange}
+                  label="Time"
+                  value={value}
+                  mode="time"
+                />
+              )}
             />
+             {errors.start_time && <Text style={styles.errorText}>{errors.start_time.message}</Text>}
           </View>
         </View>
       </View>
 
-      {/* Price & Reminder */}
-      <View style={{ flex: 1, flexDirection: "row", gap: 6 }}>
-        <View style={{ width: "50%" }}>
-          <RNInput
-            label="Price"
-            onChangeText={(t) => handleInputChange("price", t)}
-          />
-        </View>
-        <View style={{ width: "48%" }}>
-          <RNInput
-            label="Reminder"
-            onChangeText={(t) => handleInputChange("reminder", t)}
-          />
+      {/* End Date & Time */}
+      <Text style={styles.label}>Ending Date & Time</Text>
+      <View style={styles.row}>
+        <View
+          style={[
+            styles.fieldContainer,
+            { flex: 1, marginRight: 8, flexDirection: "row", gap: 6 },
+          ]}
+        >
+          <View style={{ width: "50%" }}>
+            <Controller
+              control={control}
+              name="end_date"
+              rules={{ required: "Date is required" }}
+              render={({ field: { onChange, value } }) => (
+                <RNDatePicker
+                  onChangeDate={onChange}
+                  label="Date"
+                  value={value}
+                  mode="date"
+                />
+              )}
+            />
+             {errors.end_date && <Text style={styles.errorText}>{errors.end_date.message}</Text>}
+          </View>
+          <View style={{ width: "50%" }}>
+            <Controller
+              control={control}
+              name="end_time"
+              rules={{ required: "Time is required" }}
+              render={({ field: { onChange, value } }) => (
+                <RNDatePicker
+                  onChangeDate={onChange}
+                  label="Time"
+                  value={value}
+                  mode="time"
+                />
+              )}
+            />
+             {errors.end_time && <Text style={styles.errorText}>{errors.end_time.message}</Text>}
+          </View>
         </View>
       </View>
 
-      <RNInput
-        label="Client"
-        onChangeText={(t) => handleInputChange("client", t)}
-      />
-
-      <RNInput
-        label="Location"
-        onChangeText={(t) => handleInputChange("location", t)}
-      />
-
-      {/* Service */}
-      {/* <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Service</Text>
-        <View style={styles.inputWithIcon}>
-          <TextInput
-            style={styles.input}
-            placeholder="Service here"
-            placeholderTextColor={colors.dark.textSecondary}
-            value={service}
-            onChangeText={setService}
-          />
-          <Briefcase
-            color={colors.dark.textSecondary}
-            size={20}
-            style={styles.inputIcon}
-          />
-        </View>
-      </View> */}
-      <RNInput
-        label="Service"
-        onChangeText={(t) => handleInputChange("service", t)}
-      />
-      {/* Notes */}
+      {/* Email */}
       <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Notes (optional)</Text>
-        <View style={styles.textAreaContainer}>
-          <TextInput
-            style={styles.textArea}
-            placeholder="Free text for internal information."
-            placeholderTextColor={colors.dark.textSecondary}
-            value={notes}
-            onChangeText={setNotes}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-            onChange={(t) => handleInputChange("notes", notes)}
+        <Text style={styles.label}>Client Email</Text>
+        <View style={styles.inputWithIcon}>
+          <Controller
+            control={control}
+            name="client_email"
+            rules={{
+                required: "Email is required",
+                pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                }
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Client's email here"
+                placeholderTextColor={colors.dark.textSecondary}
+                value={value}
+                onChangeText={onChange}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            )}
+          />
+        </View>
+        {errors.client_email && <Text style={styles.errorText}>{errors.client_email.message}</Text>}
+      </View>
+
+      {/* Number */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Whatsapp Number</Text>
+        <View style={styles.inputWithIcon}>
+          <Controller
+            control={control}
+            name="client_number"
+            rules={{ required: "Number is required" }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Client's number here"
+                placeholderTextColor={colors.dark.textSecondary}
+                value={value}
+                onChangeText={onChange}
+                keyboardType="phone-pad"
+              />
+            )}
+          />
+        </View>
+        {errors.client_number && <Text style={styles.errorText}>{errors.client_number.message}</Text>}
+      </View>
+
+      {/* Location */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Location</Text>
+        <View style={styles.inputWithIcon}>
+          <Controller
+            control={control}
+            name="location"
+            rules={{ required: false }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Location here"
+                placeholderTextColor={colors.dark.textSecondary}
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
           />
         </View>
       </View>
+
+      {/* Description */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Description</Text>
+        <View style={styles.inputWithIcon}>
+          <Controller
+            control={control}
+            name="description"
+            rules={{ required: false }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.textArea}
+                placeholder="Free text for internal information."
+                placeholderTextColor={colors.dark.textSecondary}
+                value={value}
+                onChangeText={onChange}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            )}
+          />
+        </View>
+      </View>
+
+      <View></View>
+
       {/* Action Buttons */}
       <View style={styles.footer}>
         <View
@@ -202,9 +309,8 @@ export default function AddAppointmentScreen() {
             gap: 12,
           }}
         >
-          <Button onPress={handleSendWhatsApp}>Send WhatsApp</Button>
-          <Button style={styles.saveButton} onPress={handleSave}>
-            Save Appointments
+          <Button style={{ width: "100%" }} onPress={handleSubmit(handleSendWhatsApp)} disabled={isLoading}>
+            {isLoading ? "Saving..." : "Save & Send Whatsapp"}
           </Button>
         </View>
         <Button variant="outline" onPress={handleCancel}>
@@ -216,16 +322,6 @@ export default function AddAppointmentScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-  },
   title: {
     fontSize: 24,
     fontWeight: "700",
@@ -237,8 +333,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: "500",
-    color: colors.dark.text,
+    color: colors.dark.textSecondary,
     marginBottom: 8,
   },
   row: {
@@ -256,45 +351,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.dark.cardBackground,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  priceInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.dark.cardBackground,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  currencyPrefix: {
-    fontSize: 15,
-    color: colors.dark.text,
-    fontWeight: "500",
-    marginRight: 4,
-  },
-  priceInput: {
-    flex: 1,
-    fontSize: 15,
-    color: colors.dark.text,
-    padding: 0,
-  },
-  priceIconPlaceholder: {
-    width: 20,
-    height: 20,
-    marginLeft: 8,
-  },
-  inputIcon: {
-    marginLeft: 8,
-  },
-  textAreaContainer: {
-    backgroundColor: colors.dark.cardBackground,
-    borderRadius: 8,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.dark.border,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -310,48 +367,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark.background,
     gap: 12,
   },
-  sendWhatsAppButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.dark.primary,
-    borderRadius: 8,
-    paddingVertical: 14,
-    gap: 8,
-    width: "50%",
-    flex: 1,
-  },
-  sendWhatsAppText: {
-    fontSize: 16,
-    fontWeight: "600",
+  colorText: {
     color: colors.dark.text,
+    fontSize: 16
   },
-  saveButton: {
-    backgroundColor: colors.dark.success,
-    borderRadius: 8,
-    paddingVertical: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "50%",
-    flex: 1,
-  },
-  saveButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.dark.text,
-  },
-  cancelButton: {
-    backgroundColor: "transparent",
-    borderRadius: 8,
-    paddingVertical: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.dark.text,
-  },
+  errorText: {
+    color: colors.dark.danger, // Assuming 'danger' or similar red color exists, otherwise use '#ff4444'
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
+  }
 });

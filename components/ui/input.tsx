@@ -27,11 +27,9 @@ export function RNInput({
     prefix,
     label,
     placeholder,
-    marginTop = 8,
+    marginTop = 0,
     ...props
 }: Props) {
-    const isFocused = useSharedValue(false);
-    const [isFocusedState, setIsFocusedState] = useState(false);
 
     const [showPassword, setShowPassword] = useState(
         props.secureTextEntry || false,
@@ -48,14 +46,6 @@ export function RNInput({
     };
 
     const labelPosition = useSharedValue(value ? 1 : 0);
-
-    const hasText = value && value.toString().length > 0;
-
-    useEffect(() => {
-        labelPosition.value = withTiming(isFocusedState || hasText ? 1 : 0, {
-            duration: 200,
-        });
-    }, [hasText, isFocusedState]);
 
     const animatedLabelStyle = useAnimatedStyle(() => {
         const translateY = labelPosition.value === 1 ? -10 : 12;
@@ -90,13 +80,13 @@ export function RNInput({
                         {
                             position: "absolute",
                             zIndex: 10,
-                            backgroundColor: colors.dark.background,
                             paddingHorizontal: 8,
-                            color: COLORS.secondaryText,
+                            color: colors.dark.textSecondary,
                         },
                         animatedLabelStyle,
                     ]}
                 >
+
                     {label}
                 </Animated.Text>
             )}
@@ -105,54 +95,30 @@ export function RNInput({
                 style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    borderWidth: 1,
-                    borderColor: isFocusedState ? colors.dark.primary : COLORS.secondaryText,
+                    borderWidth: 2,
+                    borderColor: colors.dark.border,
                     borderRadius: 8,
                     paddingRight: props.secureTextEntry ? 32 : 0,
                 }}
             >
-                {prefix && (
-                    <Animated.Text
-                        style={{
-                            color: COLORS.muted,
-                            marginLeft: 10,
-                            fontSize: 2,
-                        }}
-                    >
-                        {prefix}
-                    </Animated.Text>
-                )}
                 <TextInput
                     {...props}
                     value={value}
                     onChangeText={onChangeText}
                     onLayout={handleInputLayout}
-                    placeholder={isFocusedState ? "" : placeholder}
                     placeholderTextColor={COLORS.muted}
-                    onFocus={() => {
-                        isFocused.value = true;
-                        setIsFocusedState(true);
-                        labelPosition.value = withTiming(1, { duration: 200 });
-                    }}
-                    onBlur={() => {
-                        isFocused.value = false;
-                        setIsFocusedState(false);
-                        if (!hasText)
-                            labelPosition.value = withTiming(0, { duration: 200 });
-                    }}
                     secureTextEntry={showPassword}
                     autoComplete={props.secureTextEntry ? "off" : props.autoComplete}
                     autoCapitalize={props.secureTextEntry ? "none" : props.autoCapitalize}
                     style={[
                         {
                             flex: 1,
-                            // borderWidth: 1,
-                            // borderColor: COLORS.secondaryText,
+                            borderColor: colors.dark.border,
                             color: colors.dark.text,
                             padding: 12,
                             borderRadius: 8,
                             fontSize: 16,
-                           //  backgroundColor: colors.dark.cardBackground,
+                            backgroundColor: colors.dark.cardBackground,
                         },
                     ]}
                 />

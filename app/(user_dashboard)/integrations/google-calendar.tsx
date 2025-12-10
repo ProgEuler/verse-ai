@@ -11,7 +11,7 @@ export default function GoogleCalendar() {
 
   const handleConnect = async () => {
     try {
-      const res = await getUrl("");
+      const res = await getUrl({ "from": "app" });
       // console.log("Integration response:", res);
       await Linking.openURL(res.data.auth_url);
       Toast.success("Google Calendar connected successfully!");

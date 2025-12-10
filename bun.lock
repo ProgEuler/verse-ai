@@ -44,6 +44,7 @@
         "nativewind": "^4.2.1",
         "react": "19.1.0",
         "react-dom": "19.1.0",
+        "react-hook-form": "^7.68.0",
         "react-native": "0.81.5",
         "react-native-calendars": "^1.1313.0",
         "react-native-dotenv": "^3.4.11",
@@ -1755,6 +1756,8 @@
     "react-fast-compare": ["react-fast-compare@3.2.2", "", {}, ""],
 
     "react-freeze": ["react-freeze@1.0.4", "", { "peerDependencies": { "react": ">=17.0.0" } }, ""],
+
+    "react-hook-form": ["react-hook-form@7.68.0", "", { "peerDependencies": { "react": "^16.8.0 || ^17 || ^18 || ^19" } }, "sha512-oNN3fjrZ/Xo40SWlHf1yCjlMK417JxoSJVUXQjGdvdRCU07NTFei1i1f8ApUAts+IVh14e4EdakeLEA+BEAs/Q=="],
 
     "react-is": ["react-is@19.2.0", "", {}, ""],
 

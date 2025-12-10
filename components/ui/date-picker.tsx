@@ -1,17 +1,18 @@
 import { RNInput } from "@/components/ui/input";
-import Fontisto from "@expo/vector-icons/Fontisto";
-import DateTimePicker from "react-native-modal-datetime-picker";
-import { Pressable, TouchableOpacity } from "react-native";
+import colors, { COLORS } from "@/constants/colors";
+import { Calendar } from "lucide-react-native";
 import { useState } from "react";
-import { COLORS } from "@/constants/colors";
+import { Pressable, TouchableOpacity } from "react-native";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 type Props = {
     label?: string;
     value?: Date;
     onChangeDate?: (date: Date) => void;
+    mode: "date" | "time" | "datetime"
 };
 
-export function RNDatePicker({ label, onChangeDate, value }: Props) {
+export function RNDatePicker({ label, onChangeDate, value, mode }: Props) {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const hideDatePicker = () => {
@@ -42,22 +43,19 @@ export function RNDatePicker({ label, onChangeDate, value }: Props) {
                     key={value?.toDateString()}
                     pointerEvents="none"
                 />
-                <Fontisto
-                    style={{
+                <Calendar
+                  color={colors.dark.textSecondary}
+                  style={{
                         position: "absolute",
                         right: 8,
-                        top: 16,
+                        top: 14,
                         padding: 4,
-                    }}
-                    name="date"
-                    size={20}
-                    color={COLORS.muted}
-                />
+                    }} />
             </Pressable>
 
             <DateTimePicker
                 isVisible={isDatePickerVisible}
-                mode="date"
+                mode={mode}
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
                 modalStyleIOS={{

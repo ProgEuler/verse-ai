@@ -12,7 +12,14 @@ export const calendarApi = baseApi.injectEndpoints({
         return `/bookings/monthly/?month=${month}&year=${year}&timezone=Asia/Dhaka&day=${day}`;
       },
     }),
+    addBooking: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/create/",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetDaysDataQuery, useGetBookingsByDateQuery } = calendarApi;
+export const { useGetDaysDataQuery, useGetBookingsByDateQuery, useAddBookingMutation } = calendarApi;
