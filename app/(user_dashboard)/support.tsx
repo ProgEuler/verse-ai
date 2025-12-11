@@ -1,34 +1,40 @@
+import { useCreateSupportMutation } from '@/api/user-api/support.api';
+import { Layout } from '@/components/layout/Layout';
+import { Button } from '@/components/ui/Button';
 import colors from '@/constants/colors';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
+   StyleSheet,
+   Text,
+   TextInput,
+   View
 } from 'react-native';
+import { Toast } from 'toastify-react-native';
 
 const SupportPage = () => {
   const [message, setMessage] = useState('');
+  const [createSupport, { isLoading, error }] = useCreateSupportMutation();
 
-  const handleInvite = () => {
-    console.log('Invite button pressed');
-    // Add your invite logic here
-  };
+  const handleSendMessage = async () => {
+    if (!message.trim()) {
+      Toast.warn("Please enter a message");
+      return;
+    }
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      console.log('Message:', message);
-      // Add your message sending logic here
+    try {
+      const res = await createSupport({
+         subject: "Support",
+         description: message,
+       }).unwrap();
+      Toast.success("Message sent successfully");
       setMessage('');
+    } catch (error) {
+      Toast.error("Failed to send message");
     }
   };
 
   return (
-      <View style={styles.container}>
-        {/* Content */}
-        <View style={styles.supportCard}>
-          {/* <Text style={styles.subtitle}>Support</Text> */}
+   <Layout>
           <Text style={styles.description}>Start a chat or create a ticket</Text>
 
           <View style={styles.messageBox}>
@@ -44,37 +50,19 @@ const SupportPage = () => {
             />
           </View>
 
-          <TouchableOpacity
-            style={styles.inviteButton}
-            onPress={handleInvite}
-          >
-            <Text style={styles.inviteButtonText}>Invite</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+         <Button onPress={handleSendMessage} variant="primary" disabled={isLoading}>
+            {isLoading ? "Sending..." : "Send"}
+         </Button>
+        </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.background,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 24,
-  },
   supportCard: {
     borderRadius: 12,
     padding: 20,
   },
-  subtitle: {
+    subtitle: {
     fontSize: 20,
     fontWeight: '600',
     color: '#fff',
@@ -96,18 +84,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#fff',
     flex: 1,
-  },
-  inviteButton: {
-    backgroundColor: colors.dark.primary,
-    borderRadius: 8,
-    paddingVertical: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inviteButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
   },
 });
 
