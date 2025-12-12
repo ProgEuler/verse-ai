@@ -4,9 +4,18 @@ import { baseApi } from "../baseApi";
 export const topicsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getTopics: builder.query<TopicItem[], void>({
-      query: () => "/knowledge-base/"
+      query: () => "/knowledge-base/",
+      providesTags: ['Topics'],
+    }),
+    createTopic: builder.mutation({
+      query: (body) => ({
+        url: "/knowledge-base/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ['Topics'],
     }),
   }),
 });
 
-export const { useGetTopicsQuery } = topicsApi;
+export const { useGetTopicsQuery, useCreateTopicMutation } = topicsApi;

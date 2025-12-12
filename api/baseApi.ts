@@ -7,7 +7,7 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.EXPO_PUBLIC_API_URL,
     prepareHeaders: async (headers, { getState }) => {
-      
+
       const deviceName = Device.modelName;
       const brand = Device.brand;
 
@@ -23,5 +23,6 @@ export const baseApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ['Topics'],
   endpoints: () => ({}),
 });

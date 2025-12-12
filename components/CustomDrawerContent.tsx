@@ -8,6 +8,7 @@ import {
     BarChart3,
     BookOpen,
     Bot,
+    Brain,
     Building,
     Calendar,
     CreditCard,
@@ -56,7 +57,7 @@ const userMenuItems: MenuItem[] = [
   {
     id: "business-topics",
     label: "Business Topics",
-    icon: BookOpen,
+    icon: Brain,
     route: "/(user_dashboard)/business-topics",
   },
   {

@@ -1,11 +1,12 @@
 import { useGetTopicsQuery } from "@/api/user-api/topoics.api";
 import { Layout } from "@/components/layout/Layout";
+import NewTopicModal from "@/components/new-topic-modal";
 import TopicCard from "@/components/topics";
 import { Button } from "@/components/ui/Button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import colors from "@/constants/colors";
 import { FlashList } from "@shopify/flash-list";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export interface TopicItem {
@@ -17,6 +18,7 @@ export interface TopicItem {
 }
 
 export default function BusinessTopicsScreen() {
+   const [isModalVisible, setIsModalVisible] = useState(false);
    const { data, isLoading, error } = useGetTopicsQuery(undefined, {
       skip: false,
    });
@@ -24,17 +26,6 @@ export default function BusinessTopicsScreen() {
    if(isLoading){
     return <LoadingSpinner />
    }
-
-     if (error || !data?.length) {
-       return (
-         <View style={styles.card}>
-           <View style={styles.divider} />
-           <Text style={styles.emptyText}>
-             {error ? "Failed to load topics" : "No topics"}
-           </Text>
-         </View>
-       );
-     }
    // console.log("topics", data);
   return (
     <Layout>
@@ -44,12 +35,23 @@ export default function BusinessTopicsScreen() {
                 <Text style={styles.headerSubtitle}>CURRENT CONTEXT</Text>
                 <Text style={styles.headerTitle}>Business Topics</Text>
             </View>
-            <Button size="sm">
+            <Button size="sm" onPress={() => setIsModalVisible(true)}>
             {/* <Plus size={16} color="#FFFFFF" /> */}
             New Topic
             </Button>
         </View>
       </View>
+
+      {(error || !data?.length) &&
+         <Layout>
+         <View style={styles.card}>
+           <View style={styles.divider} />
+           <Text style={styles.emptyText}>
+             {error ? "Failed to load topics" : "No topics"}
+           </Text>
+         </View>
+         </Layout>
+       }
 
       <View style={styles.listContainer}>
         <FlashList
@@ -58,6 +60,11 @@ export default function BusinessTopicsScreen() {
           keyExtractor={(item) => item.id}
         />
       </View>
+
+      <NewTopicModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      />
     </Layout>
   );
 }
