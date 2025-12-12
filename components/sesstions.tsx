@@ -1,10 +1,10 @@
-import colors from "@/constants/colors";
-import React from "react";
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import { Button } from "./ui/Button";
-import { FlashList } from "@shopify/flash-list";
 import { useGetSessionsQuery } from "@/api/user-api/sessions.api";
+import colors from "@/constants/colors";
 import { timeAgo } from "@/utils/helpers";
+import { FlashList } from "@shopify/flash-list";
+import React from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { Button } from "./ui/Button";
 
 type Session = {
   session_id: string;
@@ -13,6 +13,7 @@ type Session = {
   ip: string;
   location?: string | null;
   last_active: string | number | Date;
+  is_current?: boolean;
 };
 
 export default function Sessions() {
@@ -53,11 +54,11 @@ export default function Sessions() {
                 <Text style={styles.sessionDevice}>
                   {item.device || "Unknown device"} • {item.browser || "Unknown browser"}
                 </Text>
-                {/* {item.is_current && (
+                {item.is_current && (
                   <View style={styles.currentBadge}>
                     <Text style={styles.currentBadgeText}>Current Session</Text>
                   </View>
-                )} */}
+                )}
               </View>
 
               <Button variant="destructive_outline" size="sm">

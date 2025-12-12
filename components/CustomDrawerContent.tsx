@@ -16,7 +16,6 @@ import {
     HelpCircle,
     LayoutDashboard,
     LogOut,
-    MessageCircle,
     MessageSquare,
     Plug,
     Settings,
@@ -53,6 +52,12 @@ const userMenuItems: MenuItem[] = [
     label: "AI Assistant",
     icon: Bot,
     route: "/(user_dashboard)/ai-assistant",
+  },
+  {
+    id: "business-topics",
+    label: "Business Topics",
+    icon: BookOpen,
+    route: "/(user_dashboard)/business-topics",
   },
   {
     id: "knowledge-base",

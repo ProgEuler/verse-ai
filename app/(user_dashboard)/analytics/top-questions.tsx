@@ -8,7 +8,7 @@ export default function TopQuestions() {
   const { data, isLoading } = useGetQuerriesDataQuery(undefined);
 
   if (isLoading) return <LoadingSpinner />;
-  console.log("Top Questions Data:", data);
+//   console.log("Top Questions Data:", data);
 
   return (
     <View style={styles.section}>

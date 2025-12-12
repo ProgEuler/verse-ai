@@ -144,7 +144,7 @@ export default function AnalyticsScreen() {
               label={"Time Range"}
               value={timeRangeLabelMap[timeRange] || ""}
               onSelectItem={(item) => {
-                console.log("selected range: ", item);
+               //  console.log("selected range: ", item);
                 setTimeRange(item);
               }}
               key={timeRange}
@@ -162,7 +162,7 @@ export default function AnalyticsScreen() {
               label="Channel"
               value={channelLabelMap[channel] || ""}
               onSelectItem={(item) => {
-                console.log("selected channel: ", item);
+               //  console.log("selected channel: ", item);
                 setChannel(item);
               }}
               key={channel}
@@ -179,7 +179,7 @@ export default function AnalyticsScreen() {
               label="All Message"
               value={messageTypeLabelMap[messageType] || ""}
               onSelectItem={(item) => {
-                console.log("selected messageType: ", item);
+               //  console.log("selected messageType: ", item);
                 setMessageType(item);
               }}
               key={messageType}

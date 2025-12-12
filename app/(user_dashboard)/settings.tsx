@@ -177,14 +177,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-  container: {
-    flex: 1,
-    backgroundColor: "#000000",
-  },
-  scrollView: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
   sectionTitle: {
     fontSize: 17,
     fontWeight: "600",

@@ -16,7 +16,7 @@ export default function Finance() {
   const { data, isLoading } = useGetFinanceDataQuery({});
   if (isLoading) return <LoadingSpinner />;
 
-  console.log("Finance Data:", data);
+//   console.log("Finance Data:", data);
   return (
     <View style={styles.financialRow}>
       {/* total payments */}
