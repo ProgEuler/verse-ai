@@ -1,23 +1,28 @@
-import { useGetSessionsQuery } from "@/api/user-api/sessions.api";
+import { useGetSessionsQuery, useLogOutAllMutation, useLogOutOtherDeviceMutation } from "@/api/user-api/sessions.api";
 import colors from "@/constants/colors";
 import { timeAgo } from "@/utils/helpers";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { Button } from "./ui/Button";
+import { useSelector } from "react-redux";
+import { selectCurrentUser, selectSessionId } from "@/store/authSlice";
+import { Toast } from "toastify-react-native";
 
 type Session = {
-  session_id: string;
+  session_id: number;
   device: string;
   browser: string;
   ip: string;
   location?: string | null;
   last_active: string | number | Date;
-  is_current?: boolean;
 };
 
 export default function Sessions() {
   const { data: sessions = [], isLoading, isError } = useGetSessionsQuery(undefined);
+   const session_id = useSelector(selectSessionId)
+   const [logoutOther, {isLoading: logginOutOther}] = useLogOutOtherDeviceMutation()
+   const [logOutAll] = useLogOutAllMutation()
 
   if (isLoading) {
     return (
@@ -41,6 +46,26 @@ export default function Sessions() {
     );
   }
 
+  const logoutOtherDevice = async (item: Session) => {
+      try {
+         await logoutOther({id: item.session_id})
+         Toast.success(`logged out from ${item.device}`)
+      } catch (error) {
+         console.log(error)
+         Toast.error(`Failed to logout from ${item.session_id}`)
+      }
+  }
+
+  const logoutAll = async () => {
+    try {
+      await logOutAll("")
+      Toast.success("Logged out from all device")
+    } catch (error) {
+      console.log(error)
+      Toast.error("Failed to logout from all device")
+    }
+  }
+
   return (
     <View style={styles.card}>
 
@@ -54,16 +79,17 @@ export default function Sessions() {
                 <Text style={styles.sessionDevice}>
                   {item.device || "Unknown device"} • {item.browser || "Unknown browser"}
                 </Text>
-                {item.is_current && (
+              </View>
+                {(session_id === item.session_id) && (
                   <View style={styles.currentBadge}>
-                    <Text style={styles.currentBadgeText}>Current Session</Text>
+                    <Text style={styles.currentBadgeText}>Current Device</Text>
                   </View>
                 )}
-              </View>
-
-              <Button variant="destructive_outline" size="sm">
+            {(session_id !== item.session_id) &&(
+              <Button onPress={() => logoutOtherDevice(item)} variant="destructive_outline" size="sm">
                 Logout
               </Button>
+            )}
             </View>
 
             <Text style={styles.sessionDetails}>
@@ -78,7 +104,7 @@ export default function Sessions() {
         scrollEnabled={false}
       />
 
-      <Button variant="outline" style={{ marginTop: 8 }}>
+      <Button onPress={logoutAll} variant="outline" style={{ marginTop: 8 }}>
         Logout from all other devices
       </Button>
     </View>
