@@ -1,3 +1,4 @@
+import AddServices from '@/components/add-services';
 import CompanyUpdateForm from '@/components/company-update-form';
 import { Layout } from '@/components/layout/Layout';
 import React from 'react';
@@ -10,6 +11,7 @@ export default function AIAssistantScreen() {
   return (
     <Layout>
       <CompanyUpdateForm onSuccess={handleSuccess} />
+      <AddServices />
     </Layout>
   );
 }

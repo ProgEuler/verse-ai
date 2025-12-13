@@ -1,5 +1,6 @@
 import { useGetServicesQuery } from "@/api/user-api/company.api";
 import colors from "@/constants/colors";
+import { FlashList } from "@shopify/flash-list";
 import { Briefcase } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -28,15 +29,18 @@ export default function Services() {
       </View>
 
       <View style={styles.listContent}>
-        {services?.map((service: any, index: number) => (
-          <View key={index} style={styles.listItem}>
+        <FlashList
+          data={services || []}
+          keyExtractor={(item: any) => item.id || item.name}
+          renderItem={({ item: service }: any) => (
+          <View style={styles.listItem}>
             <Text style={styles.listItemTitle}>{service.name}</Text>
             <View style={{ flexDirection: "row", gap: 12 }}>
-              <Text style={styles.listItemSub}>{service.duration} mins</Text>
               <Text style={styles.listItemSub}>${service.price}</Text>
             </View>
           </View>
-        ))}
+          )}
+          />
         {(!services || services.length === 0) && (
           <Text style={styles.emptyText}>No services added yet</Text>
         )}

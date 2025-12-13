@@ -17,6 +17,14 @@ export const companyApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    addService: builder.mutation({
+      query: (body) => ({
+        url: "/auth/company/service/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Company"],
+    }),
     getServices: builder.query({ query: () => "/auth/company/service/" }),
     getOpeningHours: builder.query({ query: () => "/opening-hours/" }),
   }),
@@ -26,5 +34,6 @@ export const {
   useUpdateCompanyMutation,
   useAddOpenningHourMutation,
   useGetServicesQuery,
-  useGetOpeningHoursQuery
+  useGetOpeningHoursQuery,
+  useAddServiceMutation
 } = companyApi;
