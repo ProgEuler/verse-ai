@@ -144,7 +144,6 @@ export default function AnalyticsScreen() {
               label={"Time Range"}
               value={timeRangeLabelMap[timeRange] || ""}
               onSelectItem={(item) => {
-               //  console.log("selected range: ", item);
                 setTimeRange(item);
               }}
               key={timeRange}
