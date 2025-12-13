@@ -1,31 +1,11 @@
+import CompanyInfo from "@/components/company-info";
 import { Layout } from "@/components/layout/Layout";
+import OpeningHourList from "@/components/opening-hour-list";
+import Services from "@/components/servics";
 import colors from "@/constants/colors";
-import {
-  Briefcase,
-  Building2,
-  Clock,
-  Download,
-  FileText,
-  Upload,
-} from "lucide-react-native";
+import { Download, Upload } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-interface CategoryCardProps {
-  icon: React.ReactNode;
-  title: string;
-  itemCount: number;
-}
-
-function CategoryCard({ icon, title, itemCount }: CategoryCardProps) {
-  return (
-    <TouchableOpacity style={styles.categoryCard}>
-      <View style={styles.categoryIconContainer}>{icon}</View>
-      <Text style={styles.categoryTitle}>{title}</Text>
-      <Text style={styles.categoryCount}>{itemCount} items</Text>
-    </TouchableOpacity>
-  );
-}
 
 interface ActivityItemProps {
   title: string;
@@ -66,9 +46,6 @@ export default function KnowledgeBaseScreen() {
               better results.
             </Text>
           </View>
-          <TouchableOpacity style={styles.addButton}>
-            <Text style={styles.addButtonText}>Add Knowledge</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.healthPercentageContainer}>
@@ -92,27 +69,14 @@ export default function KnowledgeBaseScreen() {
 
       <View>
         <Text style={styles.sectionTitle}>Knowledge Categories</Text>
-        <View style={styles.categoriesGrid}>
-          <CategoryCard
-            icon={<Building2 color={colors.dark.warning} size={24} />}
-            title="Company Info"
-            itemCount={1}
-          />
-          <CategoryCard
-            icon={<Briefcase color={colors.dark.success} size={24} />}
-            title="Services"
-            itemCount={7}
-          />
-          <CategoryCard
-            icon={<Clock color={colors.dark.primary} size={24} />}
-            title="Opening Hours"
-            itemCount={3}
-          />
-          <CategoryCard
-            icon={<FileText color={colors.dark.primary} size={24} />}
-            title="Policies"
-            itemCount={7}
-          />
+
+        <View style={{ gap: 16 }}>
+
+          <CompanyInfo />
+
+          <Services />
+
+          <OpeningHourList />
         </View>
       </View>
 
@@ -168,21 +132,13 @@ export default function KnowledgeBaseScreen() {
 }
 
 const styles = StyleSheet.create({
-  healthCard: {
-    backgroundColor: colors.dark.cardBackground,
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-  },
   healthHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
     marginBottom: 16,
   },
   healthTitle: {
+    textAlign: "center",
     fontSize: 16,
     fontWeight: "600" as const,
     color: colors.dark.text,
@@ -191,8 +147,8 @@ const styles = StyleSheet.create({
   healthSubtitle: {
     fontSize: 13,
     color: colors.dark.textSecondary,
+    textAlign: "center",
     lineHeight: 18,
-    maxWidth: 200,
   },
   addButton: {
     backgroundColor: colors.dark.primary,
@@ -251,40 +207,7 @@ const styles = StyleSheet.create({
     color: colors.dark.text,
     marginBottom: 16,
   },
-  categoriesGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap" as const,
-    gap: 12,
-  },
-  categoryCard: {
-    backgroundColor: colors.dark.cardBackground,
-    borderRadius: 12,
-    padding: 16,
-    width: "48%",
-    borderWidth: 1,
-    borderColor: colors.dark.border,
-    alignItems: "center",
-  },
-  categoryIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12,
-  },
-  categoryTitle: {
-    fontSize: 14,
-    fontWeight: "600" as const,
-    color: colors.dark.text,
-    marginBottom: 4,
-    textAlign: "center" as const,
-  },
-  categoryCount: {
-    fontSize: 12,
-    color: colors.dark.textSecondary,
-  },
+
   activityLog: {
     backgroundColor: colors.dark.cardBackground,
     borderRadius: 12,

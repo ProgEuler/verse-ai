@@ -53,7 +53,7 @@ export default function LoginScreen() {
         password,
       }).unwrap();
       console.log("Login response:", res);
-      dispatch(setCredentials({ user: res.user, token: res.access }));
+      dispatch(setCredentials({ user: res.user, token: res.access, session_id: res.session_id }));
       Toast.success("Login successful!");
       if (res.user.role === "admin") {
         router.replace("/(admin_dashboard)/home");

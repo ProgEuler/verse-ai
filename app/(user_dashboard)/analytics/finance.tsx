@@ -33,9 +33,9 @@ export default function Finance() {
           <Text style={styles.financialLabel}>Total Payments</Text>
         </View>
         <Text style={styles.financialValue}>
-          ${data.success_payment.current_month}
+          ${data?.success_payment.current_month}
         </Text>
-        {data.success_payment.change >= 0 ? (
+        {data?.success_payment.change >= 0 ? (
           <View style={styles.financialChange}>
             <TrendingUp color={colors.dark.success} size={14} />
             <Text
@@ -44,7 +44,7 @@ export default function Finance() {
                 { color: colors.dark.success },
               ]}
             >
-              +{data.success_payment.difference}% from last month
+              +{data?.success_payment.difference}% from last month
             </Text>
           </View>
         ) : (
@@ -57,7 +57,7 @@ export default function Finance() {
                   { color: colors.dark.danger },
                 ]}
               >
-                {data.success_payment.difference}% from last month
+                {data?.success_payment.difference}% from last month
               </Text>
             </Text>
           </View>
@@ -78,9 +78,9 @@ export default function Finance() {
           <Text style={styles.financialLabel}>Failed Payments</Text>
         </View>
         <Text style={styles.financialValue}>
-          ${data.failed_payment.current_month}
+          ${data?.failed_payment.current_month}
         </Text>
-        {data.failed_payment.change >= 0 ? (
+        {data?.failed_payment.change >= 0 ? (
           <View style={styles.financialChange}>
             <TrendingUp color={colors.dark.success} size={14} />
             <Text
@@ -89,7 +89,7 @@ export default function Finance() {
                 { color: colors.dark.success },
               ]}
             >
-              +{data.failed_payment.last_month}% from last month
+              +{data?.failed_payment.last_month}% from last month
             </Text>
           </View>
         ) : (
@@ -102,7 +102,7 @@ export default function Finance() {
                   { color: colors.dark.danger },
                 ]}
               >
-                {data.failed_payment.last_month}% from last month
+                {data?.failed_payment.last_month}% from last month
               </Text>
             </Text>
           </View>
@@ -123,9 +123,9 @@ export default function Finance() {
           <Text style={styles.financialLabel}>Pending Payments</Text>
         </View>
         <Text style={styles.financialValue}>
-          ${data.pending_payment.current_month}
+          ${data?.pending_payment.current_month}
         </Text>
-        {data.pending_payment.change >= 0 ? (
+        {data?.pending_payment.change >= 0 ? (
           <View style={styles.financialChange}>
             <TrendingUp color={colors.dark.success} size={14} />
             <Text
@@ -134,7 +134,7 @@ export default function Finance() {
                 { color: colors.dark.success },
               ]}
             >
-              +{data.pending_payment.difference}% from last month
+              +{data?.pending_payment.difference}% from last month
             </Text>
           </View>
         ) : (
@@ -147,7 +147,7 @@ export default function Finance() {
                   { color: colors.dark.danger },
                 ]}
               >
-                {data.pending_payment.difference}% from last month
+                {data?.pending_payment.difference}% from last month
               </Text>
             </Text>
           </View>
@@ -168,9 +168,9 @@ export default function Finance() {
           <Text style={styles.financialLabel}>Average order</Text>
         </View>
         <Text style={styles.financialValue}>
-          ${data.average_order.current_month}
+          ${data?.average_order.current_month}
         </Text>
-        {data.average_order.change >= 0 ? (
+        {data?.average_order.change >= 0 ? (
           <View style={styles.financialChange}>
             <TrendingUp color={colors.dark.success} size={14} />
             <Text
@@ -179,7 +179,7 @@ export default function Finance() {
                 { color: colors.dark.success },
               ]}
             >
-              +{data.average_order.difference}% from last month
+              +{data?.average_order.difference}% from last month
             </Text>
           </View>
         ) : (
@@ -192,7 +192,7 @@ export default function Finance() {
                   { color: colors.dark.danger },
                 ]}
               >
-                {data.average_order.difference}% from last month
+                {data?.average_order.difference}% from last month
               </Text>
             </Text>
           </View>

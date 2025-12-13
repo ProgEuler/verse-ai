@@ -18,3 +18,12 @@ export function timeAgo(dateInput: string | number | Date) {
   if (month < 12) return `${month}mo ago`;
   return `${year}y ago`;
 }
+
+export function getHostname(url: string) {
+   try {
+      const urlObj = new URL(url);
+      return urlObj.hostname
+   } catch (error) {
+      return "-";
+   }
+}

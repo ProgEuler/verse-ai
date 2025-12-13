@@ -20,7 +20,7 @@ export default function TopQuestions() {
       </View>
 
       <View style={styles.questionsList}>
-        {data.map((item, index) => (
+        {data?.map((item, index) => (
           <View
             key={index}
             style={[
