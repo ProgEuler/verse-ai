@@ -13,9 +13,10 @@ import { useEffect } from "react";
 import { setChannelStatus } from "@/store/channelSlice";
 import { Calendar, CheckCircle, CreditCard, DollarSign, Instagram, MessageCircle } from "lucide-react-native";
 import { RefreshControl } from "react-native";
+import ErrorScreen from "@/components/Error";
 
 export default function DashboardScreen() {
-  const { data, isLoading, refetch, isFetching } =
+  const { data, isLoading, refetch, isFetching, isError } =
     useGetDashboardDataQuery(undefined);
 
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ export default function DashboardScreen() {
   }, [data, dispatch]);
 
   if (isLoading) return <LoadingSpinner />;
+  if(isError) return <ErrorScreen onRetry={refetch} />
 //   console.log("data ->", data);
 
   function formatTime(dateString: string) {
@@ -53,7 +55,7 @@ export default function DashboardScreen() {
           <View style={styles.statIconContainer}>
             <MessageCircle color="#F59E0B" size={24} />
           </View>
-          <Text style={styles.statValue}>{data.open_chat}</Text>
+          <Text style={styles.statValue}>{data?.open_chat}</Text>
           <Text style={styles.statLabel}>Open Chats</Text>
         </View>
 
@@ -63,7 +65,7 @@ export default function DashboardScreen() {
           >
             <Calendar color="#10B981" size={24} />
           </View>
-          <Text style={styles.statValue}>{data.today_meetings.count}</Text>
+          <Text style={styles.statValue}>{data?.today_meetings.count}</Text>
           <Text style={styles.statLabel}>Appointments Today</Text>
         </View>
 
@@ -73,7 +75,7 @@ export default function DashboardScreen() {
           >
             <Calendar color="#10B981" size={24} />
           </View>
-          <Text style={styles.statValue}>{data.today_meetings.count}</Text>
+          <Text style={styles.statValue}>{data?.today_meetings.count}</Text>
           <Text style={[styles.statLabel, { textAlign: "center" }]}>
             Remaining Appointments
           </Text>
@@ -86,7 +88,7 @@ export default function DashboardScreen() {
             <DollarSign color="#10B981" size={24} />
           </View>
           <Text style={styles.statValue}>
-            {data.today_payments.list.length}
+            {data?.today_payments.list.length}
           </Text>
           <Text style={styles.statLabel}>Payments Today</Text>
         </View>
@@ -97,11 +99,11 @@ export default function DashboardScreen() {
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>Appointments Today</Text>
           <Text style={styles.cardBadge}>
-            {data.today_meetings.count} appointments
+            {data?.today_meetings.count} appointments
           </Text>
         </View>
         <View style={styles.appointmentsList}>
-          <AppointmentsList appointments={data.today_meetings.list} />
+          <AppointmentsList appointments={data?.today_meetings.list} />
         </View>
       </View>
 
@@ -110,12 +112,12 @@ export default function DashboardScreen() {
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>Payments Today</Text>
           <Text style={styles.cardBadge}>
-            {data.today_payments.list.length} Paid
+            {data?.today_payments.list.length} Paid
           </Text>
         </View>
         <View style={styles.paymentsList}>
-          {data.today_payments.list.length > 0 ? (
-            data.today_payments.list.map((payment) => (
+          {data?.today_payments.list.length > 0 ? (
+            data?.today_payments.list.map((payment) => (
               <View key={payment.transaction_id} style={styles.listItem}>
                 <Text style={styles.paymentName}>{payment.reason}</Text>
                 <Text style={styles.paymentType}>{payment.type}</Text>
@@ -178,7 +180,7 @@ export default function DashboardScreen() {
                     : colors.dark.danger,
                 }}
               >
-                {data.channel_status.whatsapp ? "Active" : "Inactive"}
+                {data?.channel_status.whatsapp ? "Active" : "Inactive"}
               </Text>
             </View>
           </View>
@@ -212,7 +214,7 @@ export default function DashboardScreen() {
                     : colors.dark.danger,
                 }}
               >
-                {data.channel_status.facebook ? "Active" : "Inactive"}
+                {data?.channel_status.facebook ? "Active" : "Inactive"}
               </Text>
             </View>
           </View>
