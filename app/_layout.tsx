@@ -22,6 +22,12 @@ const toastConfig = {
       {props.text2 && <Text style={{ color: 'white' }}>{props.text2}</Text>}
     </View>
   ),
+  error: (props) => (
+    <View style={{ backgroundColor: colors.dark.danger, padding: 16, borderRadius: 10 }}>
+      <Text style={{ color: 'white', fontWeight: 'bold' }}>{props.text1}</Text>
+      {props.text2 && <Text style={{ color: 'white' }}>{props.text2}</Text>}
+    </View>
+  ),
   // Override other toast types as needed
 }
 
@@ -56,7 +62,7 @@ export default function RootLayout() {
             barStyle="light-content"
           />
           <RootLayoutNav />
-                <ToastManager config={toastConfig} />
+                <ToastManager config={toastConfig} position="bottom" />
         </GestureHandlerRootView>
         </KeyboardProvider>
       </QueryClientProvider>
